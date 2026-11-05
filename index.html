@@ -7,335 +7,360 @@
 <meta name="description" content="Where every field the TPP RHP microsite sends to eMAX comes from: Cash Sale, payment receipt, customer check and Cash Sale PDF.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Layout: a reference sheet. Narrow contents rail on the left, one reading column of
-   rule-lined tables on the right. No cards; structure comes from type and hairlines. */
+/* Layout: app shell like the TPP microsite. White navbar with the green→yellow brand bar,
+   white sidebar panel on the left, each request as a white "form-section" card (green
+   gradient header strip) on the microsite's green-tinted canvas. Light theme only, by
+   design, to match the microsite. */
 :root {
-  --paper: #fbfbfa;
-  --ink: #1d232b;
-  --ink-2: #4f5a67;
-  --ink-3: #85909c;
-  --rule: #e2e4e7;
-  --rule-strong: #c9cdd2;
-  --wash: #f1f2f3;
-  --accent: #24508f;
-  --mark: #fff0b3;
-
-  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
-
-  --step--1: .8125rem;
-  --step-0: .9375rem;
-  --step-1: 1.125rem;
-  --step-2: 1.5rem;
-  --step-3: 2rem;
+  --tp-green: #009944; --tp-green-light: #00b550; --tp-green-dark: #007a36;
+  --tp-green-glow: rgba(0, 153, 68, .25);
+  --tp-yellow: #FFE500; --tp-yellow-dark: #e6cf00;
+  --tp-blue: #004f9f; --tp-blue-light: #1a6fbf;
+  --tp-gray-50: #fafafa; --tp-gray-100: #f5f5f5; --tp-gray-200: #eeeeee; --tp-gray-300: #e0e0e0; --tp-gray-500: #9e9e9e;
+  --tp-text: #1a1a2e; --tp-text-secondary: #64748b; --tp-white: #ffffff;
+  --tint-green: rgba(0, 153, 68, .10); --tint-blue: rgba(0, 79, 159, .09);
+  --tint-yellow: rgba(230, 207, 0, .20); --tint-gray: #f1f3f5;
+  --text-yellow: #7a6400;
+  --tp-radius-sm: 8px; --tp-radius: 12px;
+  --tp-shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --font: "Inter", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --nav-h: 64px;
   color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #14171b; --ink: #e4e7eb; --ink-2: #a9b1bb; --ink-3: #737d88;
-    --rule: #262b31; --rule-strong: #353b43; --wash: #1b1f24;
-    --accent: #8fb3ea; --mark: #5a4a12;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #14171b; --ink: #e4e7eb; --ink-2: #a9b1bb; --ink-3: #737d88;
-  --rule: #262b31; --rule-strong: #353b43; --wash: #1b1f24;
-  --accent: #8fb3ea; --mark: #5a4a12;
-  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 20px); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
-  margin: 0; background: var(--paper); color: var(--ink);
-  font: 400 var(--step-0)/1.6 var(--sans);
-  -webkit-font-smoothing: antialiased;
+  margin: 0; color: var(--tp-text); font: 400 15px/1.6 var(--font);
+  background: linear-gradient(180deg, #f0f7f2 0%, var(--tp-gray-50) 30%, var(--tp-gray-50) 70%, #f0f7f2 100%) fixed;
+  background-color: var(--tp-gray-50);
 }
-a { color: var(--accent); text-underline-offset: 2px; }
-a:focus-visible, input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-code { font-family: var(--mono); font-size: .88em; color: var(--ink); }
-h1, h2, h3 { text-wrap: balance; font-weight: 600; margin: 0; }
-p { margin: 0; }
+::selection { background: var(--tp-green); color: #fff; }
+a { color: var(--tp-blue); }
+a:hover { color: var(--tp-green); }
+code { font-family: var(--mono); font-size: .85em; background: var(--tp-gray-100); border: 1px solid var(--tp-gray-200); padding: 0 .3em; border-radius: 4px; color: var(--tp-text); word-break: break-word; }
+:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--tp-green-glow); border-radius: 4px; }
+[hidden] { display: none !important; }
 
-/* Top bar */
-.bar {
-  position: sticky; top: 0; z-index: 10; background: var(--paper);
-  border-bottom: 1px solid var(--rule);
+/* Navbar */
+.nav {
+  position: sticky; top: 0; z-index: 20; height: var(--nav-h);
+  background: var(--tp-white); box-shadow: var(--tp-shadow-sm);
 }
-.bar-in {
-  max-width: 1180px; margin: 0 auto; height: 56px;
-  display: flex; align-items: center; gap: 24px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+.nav::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, var(--tp-green), var(--tp-yellow), var(--tp-green)); }
+.nav-in {
+  height: 100%; display: flex; align-items: center; gap: 20px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.name { font-weight: 600; white-space: nowrap; }
-.name span { color: var(--ink-3); font-weight: 400; }
-.find { margin-left: auto; display: flex; align-items: center; gap: 16px; min-width: 0; flex: 0 1 380px; }
-.find input {
-  width: 100%; min-width: 0; height: 34px; padding: 0 10px;
-  font: inherit; font-size: var(--step--1); color: var(--ink);
-  background: var(--wash); border: 1px solid var(--rule); border-radius: 4px;
+.brand { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+.brand .mark { width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg, var(--tp-green) 0%, var(--tp-green-light) 100%); display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 13px; letter-spacing: .02em; }
+.brand b { font-weight: 700; font-size: 16px; }
+.brand .sep { width: 1px; height: 22px; background: var(--tp-gray-300); }
+.brand small { font-size: 13px; color: var(--tp-text-secondary); font-weight: 500; }
+.tools { margin-left: auto; display: flex; align-items: center; gap: 14px; min-width: 0; flex: 0 1 420px; }
+.tools input[type=search] {
+  width: 100%; min-width: 0; height: 38px; padding: 0 12px; font: inherit; font-size: 14px; color: var(--tp-text);
+  background: var(--tp-gray-50); border: 1.5px solid var(--tp-gray-300); border-radius: var(--tp-radius-sm);
 }
-.find input::placeholder { color: var(--ink-3); }
-.toggle { display: flex; align-items: center; gap: 6px; font-size: var(--step--1); color: var(--ink-2); white-space: nowrap; cursor: pointer; }
-.toggle input { margin: 0; accent-color: var(--accent); }
+.tools input[type=search]:focus { border-color: var(--tp-green); background: #fff; box-shadow: 0 0 0 3px var(--tp-green-glow); }
+.switch { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--tp-text-secondary); white-space: nowrap; cursor: pointer; user-select: none; }
+.switch input { appearance: none; width: 34px; height: 20px; border-radius: 999px; background: var(--tp-gray-300); position: relative; cursor: pointer; margin: 0; transition: background .15s; }
+.switch input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: var(--tp-shadow-sm); transition: transform .15s; }
+.switch input:checked { background: var(--tp-green); }
+.switch input:checked::after { transform: translateX(14px); }
 
-/* Page */
-.page {
-  max-width: 1180px; margin: 0 auto;
-  display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px;
-  padding: 48px max(16px, env(safe-area-inset-right, 0px)) 96px max(16px, env(safe-area-inset-left, 0px));
+/* Shell */
+.shell { display: grid; grid-template-columns: 264px minmax(0, 1fr); min-height: calc(100vh - var(--nav-h)); }
+.side {
+  position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h)); overflow-y: auto;
+  background: var(--tp-white); border-right: 1px solid var(--tp-gray-200); padding: 20px 14px 32px;
 }
-.toc { position: sticky; top: 104px; align-self: start; font-size: var(--step--1); }
-.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.toc a { display: block; padding: 3px 0; color: var(--ink-2); text-decoration: none; }
-.toc a:hover { color: var(--ink); }
-.toc a.on { color: var(--ink); font-weight: 600; }
-.toc .sub a { padding-left: 14px; color: var(--ink-3); }
-.toc .sub a.on { color: var(--ink); }
-.toc .label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 18px 0 6px; }
-.toc .label:first-child { margin-top: 0; }
+.side .grp { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--tp-gray-500); padding: 0 12px; margin: 20px 0 6px; }
+.side .grp:first-child { margin-top: 0; }
+.side a {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 8px 12px; border-radius: var(--tp-radius-sm); border-left: 3px solid transparent;
+  color: var(--tp-text); font-size: 14px; font-weight: 500; text-decoration: none;
+}
+.side a:hover { background: var(--tp-gray-100); color: var(--tp-text); }
+.side a.sub { padding-left: 28px; font-size: 13px; font-weight: 400; color: var(--tp-text-secondary); }
+.side a.on { background: var(--tint-green); border-left-color: var(--tp-green); color: var(--tp-green-dark); font-weight: 600; }
+.side a .cnt { font-size: 11px; font-weight: 600; color: var(--tp-text-secondary); background: var(--tp-gray-100); border-radius: 999px; padding: 1px 7px; }
+.side a.on .cnt { background: #fff; color: var(--tp-green-dark); }
 
-main { min-width: 0; }
-.intro { max-width: 68ch; display: grid; gap: 14px; }
-.intro h1 { font-size: var(--step-3); line-height: 1.2; letter-spacing: -.015em; }
-.intro p { color: var(--ink-2); }
-.seq {
-  margin-top: 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px;
-  font-size: var(--step--1); color: var(--ink-2);
+main {
+  min-width: 0; display: grid; gap: 24px; align-content: start;
+  padding-block: 28px 64px;
+  padding-left: max(16px, min(40px, 4vw)); padding-right: max(16px, min(40px, 4vw), env(safe-area-inset-right, 0px));
 }
-.seq b { color: var(--ink); font-weight: 500; }
-.seq i { font-style: normal; color: var(--ink-3); }
+.wrap { max-width: 1080px; width: 100%; display: grid; gap: 24px; }
 
-section { margin-top: 64px; display: grid; gap: 14px; }
-section > header { display: grid; gap: 8px; max-width: 72ch; }
-h2 { font-size: var(--step-2); letter-spacing: -.01em; line-height: 1.3; }
-h3 { font-size: var(--step-1); margin-top: 22px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-h3 .n { font-size: var(--step--1); font-weight: 400; color: var(--ink-3); }
-.lede { color: var(--ink-2); max-width: 72ch; }
-.call {
-  font-family: var(--mono); font-size: var(--step--1); color: var(--ink-2);
-  overflow-x: auto; white-space: nowrap;
-}
-.call b { color: var(--ink); font-weight: 500; margin-right: 8px; }
-.note { font-size: var(--step--1); color: var(--ink-2); max-width: 72ch; padding-top: 10px; border-top: 1px solid var(--rule); }
-.note strong { color: var(--ink); font-weight: 600; }
+/* Page heading */
+.title { display: grid; gap: 6px; }
+.title h1 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; text-wrap: balance; }
+.title p { margin: 0; color: var(--tp-text-secondary); max-width: 70ch; }
 
-/* Tables */
-.scroll { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); line-height: 1.5; }
-thead th {
-  text-align: left; font-weight: 500; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--ink-3); padding: 0 16px 8px 0; border-bottom: 1px solid var(--rule-strong);
+/* Section card (microsite .form-section) */
+.card { background: var(--tp-white); border-radius: var(--tp-radius); box-shadow: var(--tp-shadow-sm); overflow: hidden; border: 1px solid var(--tp-gray-200); }
+.card-h {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 12px 20px; color: #fff;
+  background: linear-gradient(135deg, var(--tp-green) 0%, var(--tp-green-light) 100%);
 }
-tbody td { padding: 10px 16px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
-td.f { font-family: var(--mono); font-weight: 500; white-space: nowrap; width: 1%; }
-td.s { min-width: 280px; color: var(--ink); }
-td.s .k { display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 1px; }
-td.e { font-family: var(--mono); color: var(--ink-2); width: 30%; min-width: 150px; word-break: break-word; font-variant-numeric: tabular-nums; }
-tr.fixed td { color: var(--ink-3); }
-tr.fixed td.f { color: var(--ink-2); font-weight: 400; }
-tr.fixed td.s code { color: var(--ink-3); }
+.card-h h2 { margin: 0; font-size: 13.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.card-h .ep { font-family: var(--mono); font-size: 12px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28); padding: 3px 10px; border-radius: 999px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.card-h .ep b { font-weight: 700; margin-right: 6px; }
+.card-b { padding: 20px; display: grid; gap: 16px; min-width: 0; }
+.card-b > p { margin: 0; color: var(--tp-text-secondary); max-width: 80ch; }
+.sub-h { display: flex; align-items: center; gap: 10px; margin: 8px 0 0; font-size: 15px; font-weight: 700; }
+.sub-h .cnt { font-size: 12px; font-weight: 600; color: var(--tp-green-dark); background: var(--tint-green); border-radius: 999px; padding: 1px 9px; }
+
+/* Stepper (the real posting order) */
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; padding: 4px 0 0; }
+.step { position: relative; display: grid; justify-items: center; align-content: start; text-align: center; gap: 8px; padding: 0 8px; }
+.step::before { content: ""; position: absolute; top: 18px; left: -50%; width: 100%; height: 3px; background: linear-gradient(90deg, var(--tp-green), var(--tp-green-light)); z-index: 0; }
+.step:first-child::before { display: none; }
+.step .dot { position: relative; z-index: 1; width: 38px; height: 38px; border-radius: 50%; background: var(--tp-green); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px; box-shadow: 0 0 0 4px var(--tp-green-glow); }
+.step b { font-size: 14px; }
+.step span { font-size: 12.5px; color: var(--tp-text-secondary); line-height: 1.45; }
+.alert { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: var(--tp-radius-sm); background: var(--tint-blue); color: var(--tp-text); font-size: 14px; }
+.alert .i { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--tp-blue); color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center; margin-top: 1px; }
+.alert.warn { background: var(--tint-yellow); }
+.alert.warn .i { background: var(--tp-yellow-dark); color: var(--tp-text); }
+
+/* Source badges: four groups */
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .02em; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge.g-setting { background: var(--tint-blue); color: var(--tp-blue); }
+.badge.g-data { background: var(--tint-green); color: var(--tp-green-dark); }
+.badge.g-calc { background: var(--tint-yellow); color: var(--text-yellow); }
+.badge.g-fixed { background: var(--tint-gray); color: var(--tp-text-secondary); }
+
+.keygrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.key { border: 1px solid var(--tp-gray-200); border-radius: var(--tp-radius-sm); padding: 12px 14px; display: grid; gap: 6px; align-content: start; justify-items: start; font-size: 13px; color: var(--tp-text-secondary); }
+.key ul { margin: 0; padding-left: 16px; display: grid; gap: 2px; }
+
+/* Table (microsite .table-tp) */
+.tbl { overflow-x: auto; border: 1px solid var(--tp-gray-200); border-radius: var(--tp-radius-sm); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.5; }
+thead th { text-align: left; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--tp-text-secondary); background: var(--tp-gray-50); padding: 10px 14px; border-bottom: 1px solid var(--tp-gray-200); white-space: nowrap; }
+tbody td { padding: 11px 14px; border-bottom: 1px solid var(--tp-gray-200); vertical-align: top; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: rgba(0, 153, 68, .04); }
+td.f { font-family: var(--mono); font-weight: 600; font-size: 12.5px; white-space: nowrap; width: 1%; }
+td.s { min-width: 300px; }
+td.s .badge { margin-bottom: 4px; }
+td.s .d { display: block; }
+td.e { font-family: var(--mono); font-size: 12.5px; color: var(--tp-text-secondary); width: 28%; min-width: 150px; word-break: break-word; font-variant-numeric: tabular-nums; }
+tr.fixed td.f { font-weight: 400; color: var(--tp-text-secondary); }
+tr.fixed td.s .d, tr.fixed td.e { color: var(--tp-gray-500); }
 body.hide-fixed tr.fixed { display: none; }
-tr[hidden] { display: none; }
-mark { background: var(--mark); color: inherit; border-radius: 2px; }
+mark { background: var(--tp-yellow); color: var(--tp-text); border-radius: 2px; padding: 0 1px; }
 
-/* Sources key */
-dl.key { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 24px; margin: 0; font-size: var(--step--1); max-width: 80ch; }
-dl.key dt { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding-top: 2px; }
-dl.key dd { margin: 0; color: var(--ink-2); }
+/* eMAX print-line mock */
+.doc { border: 1px solid var(--tp-gray-300); border-radius: var(--tp-radius-sm); overflow-x: auto; }
+.doc table { min-width: 640px; font-size: 12.5px; }
+.doc thead th { background: var(--tp-blue); color: #fff; border: 0; font-size: 11.5px; letter-spacing: .02em; }
+.doc td { padding: 10px 14px; border: 0; }
+.doc tbody tr:hover td { background: none; }
+.doc .num { text-align: right; font-variant-numeric: tabular-nums; }
+.doc .rem { display: block; color: var(--tp-text-secondary); }
+.doc .fld { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--tp-green-dark); background: var(--tint-green); padding: 1px 6px; border-radius: 4px; }
+.doc .tot td { border-top: 1px solid var(--tp-gray-200); font-weight: 700; }
+.cap { font-size: 12.5px; color: var(--tp-text-secondary); margin: -6px 0 0; }
 
-/* Print-line mock: the eMAX Cash Sale line as printed */
-.doc { border: 1px solid var(--rule-strong); border-radius: 2px; overflow-x: auto; }
-.doc table { font-size: 12.5px; min-width: 620px; }
-.doc thead th { padding: 8px 12px; color: var(--ink-2); border-bottom: 1px solid var(--rule-strong); background: var(--wash); }
-.doc td { padding: 10px 12px; border: 0; }
-.doc td.num, .doc th.num { text-align: right; font-variant-numeric: tabular-nums; }
-.doc .rem { display: block; color: var(--ink-2); }
-.doc .tag { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--accent); margin-top: 6px; }
-.doc .tot td { border-top: 1px solid var(--rule); font-weight: 600; }
-.caption { font-size: var(--step--1); color: var(--ink-3); }
+.empty { background: var(--tp-white); border: 1.5px dashed var(--tp-gray-300); border-radius: var(--tp-radius); padding: 28px; text-align: center; color: var(--tp-text-secondary); }
+footer { font-size: 12.5px; color: var(--tp-text-secondary); padding-top: 8px; }
 
-.empty { margin-top: 40px; color: var(--ink-2); }
-footer { margin-top: 80px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: var(--step--1); color: var(--ink-3); }
-
+@media (max-width: 1100px) { .keygrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 900px) {
-  .page { grid-template-columns: minmax(0, 1fr); padding-top: 32px; }
-  .toc { display: none; }
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { display: none; }
+  .brand small, .brand .sep { display: none; }
 }
-@media (max-width: 560px) {
-  .bar-in { gap: 12px; }
-  .name span { display: none; }
-  .find { gap: 10px; }
-  .intro h1 { font-size: 1.625rem; }
-  dl.key { grid-template-columns: minmax(0, 1fr); gap: 2px; }
-  dl.key dd { margin-bottom: 8px; }
+@media (max-width: 600px) {
+  .steps { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .step { grid-template-columns: 38px minmax(0, 1fr); justify-items: start; text-align: left; column-gap: 12px; row-gap: 0; padding: 0; }
+  .step .dot { grid-row: span 2; }
+  .step::before { display: none; }
+  .keygrid { grid-template-columns: minmax(0, 1fr); }
+  .switch span { display: none; }
+  .brand b { font-size: 15px; }
+  .title h1 { font-size: 23px; }
+  .card-b { padding: 16px; }
+  .card-h { padding: 12px 16px; }
 }
 </style>
 </head>
 <body>
-<div class="bar">
-  <div class="bar-in">
-    <div class="name">eMAX Field Mapping <span>· TPP RHP microsite</span></div>
-    <div class="find">
+<header class="nav">
+  <div class="nav-in">
+    <div class="brand"><div class="mark">RHP</div><b>eMAX Field Mapping</b><span class="sep"></span><small>TPP Microsite</small></div>
+    <div class="tools">
       <input id="q" type="search" placeholder="Find a field or value  ( / )" autocomplete="off" aria-label="Find a field or value">
-      <label class="toggle" for="hideFixed"><input type="checkbox" id="hideFixed"><span>Hide fixed</span></label>
+      <label class="switch" for="hideFixed"><input type="checkbox" id="hideFixed"><span>Hide fixed</span></label>
     </div>
   </div>
-</div>
+</header>
 
-<div class="page">
-  <nav class="toc" aria-label="Contents">
-    <div class="label">Overview</div>
-    <ol>
-      <li><a href="#top">How posting works</a></li>
-      <li><a href="#sources">Where values come from</a></li>
-      <li><a href="#values">Shared values</a></li>
-    </ol>
-    <div class="label">Requests</div>
-    <ol>
-      <li><a href="#sales">Cash Sale</a></li>
-      <li class="sub"><a href="#sales-header">Header</a></li>
-      <li class="sub"><a href="#sales-line">Line</a></li>
-      <li><a href="#payment">Payment receipt</a></li>
-      <li class="sub"><a href="#payment-header">Header</a></li>
-      <li class="sub"><a href="#payment-line">Line</a></li>
-      <li><a href="#customer">Customer check</a></li>
-      <li><a href="#pdf">Cash Sale PDF</a></li>
-    </ol>
-    <div class="label">Results</div>
-    <ol>
-      <li><a href="#log">What we save</a></li>
-    </ol>
+<div class="shell">
+  <nav class="side" aria-label="Contents">
+    <div class="grp">Overview</div>
+    <a href="#overview">How posting works</a>
+    <a href="#sources">Where values come from</a>
+    <a href="#values">Shared values</a>
+    <div class="grp">Requests to eMAX</div>
+    <a href="#sales">Cash Sale</a>
+    <a class="sub" href="#sales-header">Header <span class="cnt" data-count="t-sales-header"></span></a>
+    <a class="sub" href="#sales-line">Line <span class="cnt" data-count="t-sales-line"></span></a>
+    <a href="#payment">Payment receipt</a>
+    <a class="sub" href="#payment-header">Header <span class="cnt" data-count="t-payment-header"></span></a>
+    <a class="sub" href="#payment-line">Line <span class="cnt" data-count="t-payment-line"></span></a>
+    <a href="#customer">Customer check</a>
+    <a href="#pdf">Cash Sale PDF</a>
+    <div class="grp">Results</div>
+    <a href="#log">What we save</a>
   </nav>
 
   <main>
-    <div class="intro" id="top">
-      <h1>Where every eMAX field comes from</h1>
-      <p>When a customer pays for an RHP warranty on the microsite, it is posted to eMAX as a Cash Sale and a payment receipt. Each table below lists a field eMAX receives, where its value comes from, and an example.</p>
-      <p>The example throughout is warranty <code>RHP-20261105-E94325329</code>: 4 tyres, paid RM&nbsp;108.00 including 8% SST.</p>
-      <div class="seq" aria-label="Posting sequence">
-        <b>Payment recorded</b><i>→</i><b>Customer check</b><i>→</i><b>Cash Sale</b><i>(returns CS no.)</i><i>→</i><b>Payment receipt</b><i>(returns OR no.)</i>
+    <div class="wrap">
+      <div class="title" id="top">
+        <h1>Where every eMAX field comes from</h1>
+        <p>When a customer pays for an RHP warranty on the microsite, it is posted to eMAX as a Cash Sale and a payment receipt. Every field eMAX receives is listed below with its source and an example. The example is warranty <code>RHP-20261105-E94325329</code>: 4 tyres, paid RM 108.00 including 8% SST.</p>
       </div>
-      <p class="note">Posting runs once, right after payment. If it fails, an alert email is sent and nothing is retried automatically. Check eMAX first, then retry with <code>POST api/emax/post/{warrantyId}</code>.</p>
+
+      <section class="card" id="overview">
+        <div class="card-h"><h2>How posting works</h2></div>
+        <div class="card-b">
+          <div class="steps">
+            <div class="step"><div class="dot">1</div><b>Payment recorded</b><span>Fiuu confirms the payment and the warranty becomes Paid</span></div>
+            <div class="step"><div class="dot">2</div><b>Customer check</b><span>eMAX confirms the cash customer exists</span></div>
+            <div class="step"><div class="dot">3</div><b>Cash Sale</b><span>eMAX creates the sale and returns its CS number</span></div>
+            <div class="step"><div class="dot">4</div><b>Payment receipt</b><span>eMAX records the receipt against that CS and returns its OR number</span></div>
+          </div>
+          <div class="alert"><span class="i">i</span><div>Posting runs once, right after payment. If it fails, an alert email is sent and nothing is retried automatically. Check eMAX first, then retry with <code>POST api/emax/post/{warrantyId}</code>.</div></div>
+        </div>
+      </section>
+
+      <section class="card" id="sources">
+        <div class="card-h"><h2>Where values come from</h2></div>
+        <div class="card-b">
+          <p>Each source in the tables carries one of these four badges.</p>
+          <div class="keygrid">
+            <div class="key"><span class="badge g-setting">Setting</span><div>A row in <code>Master_SystemInformation</code>. The table shows the parameter name.</div></div>
+            <div class="key"><span class="badge g-data">Database</span><div>A column of a microsite table:
+              <ul><li>Warranty: <code>RHP_Warranty_Reg_Header</code></li><li>Tyres: <code>RHP_Warranty_Reg_Detail</code></li><li>Payment: <code>RHP_Payment</code></li><li>Fiuu log: <code>Fiuu_Payment_Log</code></li><li>Post log: <code>Emax_Post_Log</code></li></ul></div></div>
+            <div class="key"><span class="badge g-calc">Calculated</span><div>Worked out by the microsite. See Shared values.</div></div>
+            <div class="key"><span class="badge g-fixed">Fixed</span><div>Always the same value. Use Hide fixed in the top bar to hide these rows.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="values">
+        <div class="card-h"><h2>Shared values</h2></div>
+        <div class="card-b">
+          <p>Worked out once and reused by several fields.</p>
+          <div class="tbl"><table><thead><tr><th>Value</th><th>How it is worked out</th><th>Example</th></tr></thead><tbody id="t-values"></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="card" id="sales">
+        <div class="card-h"><h2>Cash Sale</h2><span class="ep"><b>POST</b>/Sales?Method=ImportSales</span></div>
+        <div class="card-b">
+          <p>A JSON array with one sales header, sent to <code>{EmaxWebAPIUrl}</code>. Nothing is sent if any of <code>EmaxBranchCode</code>, <code>EmaxCustomerCode</code>, <code>EmaxItemCode_{plan}</code>, <code>EmaxPaymentType</code> or <code>EmaxPaymentAccountCode</code> is blank.</p>
+
+          <div class="doc" role="figure" aria-label="How the line prints on the eMAX Cash Sale">
+            <table>
+              <thead><tr><th>No</th><th>Description</th><th class="num">Qty</th><th>UOM</th><th class="num">U.Price</th><th class="num">Disc.</th><th class="num">SST</th><th class="num">Amount</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>RHP Road Hazard Protection Warranty - RHP-20261105-E94325329<span class="rem">Plate VJH988 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V</span><span class="fld">ItemDescription + Remark</span></td>
+                  <td class="num">1.0<br><span class="fld">Quantity</span></td>
+                  <td>UNIT<br><span class="fld">UOMCode</span></td>
+                  <td class="num">100.00<br><span class="fld">UnitPrice</span></td>
+                  <td class="num">0.00<br><span class="fld">DiscountAmount</span></td>
+                  <td class="num">8.00<br><span class="fld">TaxAmount</span></td>
+                  <td class="num">108.00<br><span class="fld">TotalAmountWithTax</span></td>
+                </tr>
+                <tr class="tot"><td></td><td>Total</td><td></td><td></td><td></td><td></td><td class="num">8.00</td><td class="num">108.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="cap">How the single warranty line prints on the eMAX Cash Sale, with the field that fills each column.</p>
+
+          <h3 class="sub-h" id="sales-header">Header <span class="cnt" data-count="t-sales-header"></span></h3>
+          <div class="tbl"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-sales-header"></tbody></table></div>
+
+          <h3 class="sub-h" id="sales-line">Line · ItemDetails[0] <span class="cnt" data-count="t-sales-line"></span></h3>
+          <div class="tbl"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-sales-line"></tbody></table></div>
+          <div class="alert warn"><span class="i">!</span><div>The whole warranty is one line, priced from what the customer paid. The tyre prices in <code>RHP_Warranty_Reg_Detail.Price</code> are not used. When 3 tyres are billed as 4 × the unit price, the billed amount is what appears here.</div></div>
+        </div>
+      </section>
+
+      <section class="card" id="payment">
+        <div class="card-h"><h2>Payment receipt</h2><span class="ep"><b>POST</b>/ReceivePayment?Method=ImportPayment</span></div>
+        <div class="card-b">
+          <p>Sent only after the Cash Sale succeeds, as a JSON array with one receipt. It has no <code>DocumentType</code> field.</p>
+          <h3 class="sub-h" id="payment-header">Header <span class="cnt" data-count="t-payment-header"></span></h3>
+          <div class="tbl"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-payment-header"></tbody></table></div>
+          <h3 class="sub-h" id="payment-line">Line · ItemDetails[0] <span class="cnt" data-count="t-payment-line"></span></h3>
+          <p>Links the receipt to the Cash Sale it pays.</p>
+          <div class="tbl"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-payment-line"></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="card" id="customer">
+        <div class="card-h"><h2>Customer check</h2><span class="ep"><b>GET</b>/Customerstd?Method=GetCust</span></div>
+        <div class="card-b">
+          <p>Runs before the Cash Sale unless <code>EmaxCheckCustomer</code> is <code>false</code>. If eMAX finds no customer, nothing is posted.</p>
+          <div class="tbl"><table><thead><tr><th>Parameter</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-customer"></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="card" id="pdf">
+        <div class="card-h"><h2>Cash Sale PDF</h2><span class="ep"><b>GET</b>/AppWA/Sales/GetSalesPdf</span></div>
+        <div class="card-b">
+          <p>Called when someone clicks Cash Sale on the Status page. It is a GET with a JSON body. eMAX returns a print link, and the microsite downloads the PDF and shows it.</p>
+          <div class="tbl"><table><thead><tr><th>Field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-pdf"></tbody></table></div>
+          <h3 class="sub-h" id="pdf-token">Bearer token claims <span class="cnt" data-count="t-token"></span></h3>
+          <p>The microsite builds this token itself (signed HS256, then encrypted A256KW / A256CBC-HS512). It is valid for one hour and never reaches the browser.</p>
+          <div class="tbl"><table><thead><tr><th>Claim</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-token"></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="card" id="log">
+        <div class="card-h"><h2>What we save</h2><span class="ep">Emax_Post_Log</span></div>
+        <div class="card-b">
+          <p>Each warranty has one row. The Cash Sale button on the Status page appears once <code>InvoiceDocNo</code> is filled.</p>
+          <div class="tbl"><table><thead><tr><th>Column</th><th>Comes from</th><th>Example</th></tr></thead><tbody id="t-log"></tbody></table></div>
+        </div>
+      </section>
+
+      <div class="empty" id="empty" hidden>No field matches that search.</div>
+
+      <footer>Taken from the microsite source: EmaxPostingService (BuildSales, BuildPayment), EmaxClient and AppWAToken. Updated 05/11/2026.</footer>
     </div>
-
-    <section id="sources">
-      <header><h2>Where values come from</h2></header>
-      <dl class="key" id="key"></dl>
-    </section>
-
-    <section id="values">
-      <header>
-        <h2>Shared values</h2>
-        <p class="lede">Worked out once and reused by several fields.</p>
-      </header>
-      <div class="scroll"><table><thead><tr><th>Value</th><th>How it is worked out</th><th>Example</th></tr></thead><tbody id="t-values"></tbody></table></div>
-    </section>
-
-    <section id="sales">
-      <header>
-        <h2>Cash Sale</h2>
-        <div class="call"><b>POST</b>{EmaxWebAPIUrl}/Sales?Method=ImportSales</div>
-        <p class="lede">A JSON array with one sales header. Nothing is sent if any of these settings is blank: <code>EmaxBranchCode</code>, <code>EmaxCustomerCode</code>, <code>EmaxItemCode_{plan}</code> (or <code>EmaxItemCode</code>), <code>EmaxPaymentType</code>, <code>EmaxPaymentAccountCode</code>.</p>
-      </header>
-
-      <div class="doc" role="figure" aria-label="How the line prints on the eMAX Cash Sale">
-        <table>
-          <thead><tr><th>No</th><th>Description</th><th class="num">Qty</th><th>UOM</th><th class="num">U.Price</th><th class="num">Disc.</th><th class="num">SST</th><th class="num">Amount</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>RHP Road Hazard Protection Warranty - RHP-20261105-E94325329
-                <span class="rem">Plate VJH988 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V</span>
-                <span class="tag">ItemDescription · Remark</span></td>
-              <td class="num">1.0<span class="tag">Quantity</span></td>
-              <td>UNIT<span class="tag">UOMCode</span></td>
-              <td class="num">100.00<span class="tag">UnitPrice</span></td>
-              <td class="num">0.00<span class="tag">DiscountAmount</span></td>
-              <td class="num">8.00<span class="tag">TaxAmount</span></td>
-              <td class="num">108.00<span class="tag">TotalAmountWithTax</span></td>
-            </tr>
-            <tr class="tot"><td></td><td>Total</td><td></td><td></td><td></td><td></td><td class="num">8.00</td><td class="num">108.00</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="caption">How the single warranty line prints on the eMAX Cash Sale, with the field that fills each column.</p>
-
-      <h3 id="sales-header">Header <span class="n" data-count="t-sales-header"></span></h3>
-      <div class="scroll"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-sales-header"></tbody></table></div>
-
-      <h3 id="sales-line">Line <code>ItemDetails[0]</code> <span class="n" data-count="t-sales-line"></span></h3>
-      <p class="lede">The whole warranty is one line. The tyres are summarised in its remark.</p>
-      <div class="scroll"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-sales-line"></tbody></table></div>
-      <p class="note"><strong>Pricing.</strong> The line is priced from what the customer paid, not from the tyre prices in <code>RHP_Warranty_Reg_Detail.Price</code>. When 3 tyres are billed as 4 × the unit price, the billed amount is what appears here.</p>
-    </section>
-
-    <section id="payment">
-      <header>
-        <h2>Payment receipt</h2>
-        <div class="call"><b>POST</b>{EmaxWebAPIUrl}/ReceivePayment?Method=ImportPayment</div>
-        <p class="lede">Sent only after the Cash Sale succeeds, as a JSON array with one receipt. It has no <code>DocumentType</code> field.</p>
-      </header>
-      <h3 id="payment-header">Header <span class="n" data-count="t-payment-header"></span></h3>
-      <div class="scroll"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-payment-header"></tbody></table></div>
-      <h3 id="payment-line">Line <code>ItemDetails[0]</code> <span class="n" data-count="t-payment-line"></span></h3>
-      <p class="lede">Links the receipt to the Cash Sale it pays.</p>
-      <div class="scroll"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-payment-line"></tbody></table></div>
-    </section>
-
-    <section id="customer">
-      <header>
-        <h2>Customer check</h2>
-        <div class="call"><b>GET</b>{EmaxWebAPIUrl}/Customerstd?Method=GetCust&amp;Keyword=…</div>
-        <p class="lede">Runs before the Cash Sale unless <code>EmaxCheckCustomer</code> is <code>false</code>. If eMAX finds no customer, nothing is posted.</p>
-      </header>
-      <div class="scroll"><table><thead><tr><th>Parameter</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-customer"></tbody></table></div>
-    </section>
-
-    <section id="pdf">
-      <header>
-        <h2>Cash Sale PDF</h2>
-        <div class="call"><b>GET</b>{EmaxWebAPIUrl}/AppWA/Sales/GetSalesPdf</div>
-        <p class="lede">Called when someone clicks Cash Sale on the Status page. It is a GET with a JSON body. eMAX returns a print link, and the microsite downloads the PDF and shows it.</p>
-      </header>
-      <div class="scroll"><table><thead><tr><th>Field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-pdf"></tbody></table></div>
-      <h3 id="pdf-token">Bearer token claims <span class="n" data-count="t-token"></span></h3>
-      <p class="lede">The microsite builds this token itself (signed HS256, then encrypted A256KW / A256CBC-HS512). It is valid for one hour and never reaches the browser.</p>
-      <div class="scroll"><table><thead><tr><th>Claim</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-token"></tbody></table></div>
-    </section>
-
-    <section id="log">
-      <header>
-        <h2>What we save</h2>
-        <p class="lede">Each warranty has one row in <code>Emax_Post_Log</code>. The Cash Sale button on the Status page appears once <code>InvoiceDocNo</code> is filled.</p>
-      </header>
-      <div class="scroll"><table><thead><tr><th>Column</th><th>Comes from</th><th>Example</th></tr></thead><tbody id="t-log"></tbody></table></div>
-    </section>
-
-    <p class="empty" id="empty" hidden>No field matches that search.</p>
-
-    <footer>Taken from the microsite source: <code>EmaxPostingService</code> (BuildSales, BuildPayment), <code>EmaxClient</code>, <code>AppWAToken</code>. Updated 05/11/2026.</footer>
   </main>
 </div>
 
 <script>
-// Source kinds: key → [label, meaning]
+// Source kinds → [badge text, group]
 const KINDS = {
-  setting: ["Setting",    "<code>Master_SystemInformation</code>, the <code>Value</code> for the parameter named."],
-  header:  ["Warranty",   "<code>RHP_Warranty_Reg_Header</code>, the warranty being posted."],
-  detail:  ["Tyre rows",  "<code>RHP_Warranty_Reg_Detail</code>, the warranty's tyres."],
-  payment: ["Payment",    "<code>RHP_Payment</code>, joined on the warranty's <code>PaymentID</code>."],
-  outlet:  ["Outlet",     "<code>Master_Customer</code>, the outlet chosen at registration."],
-  fiuu:    ["Fiuu log",   "<code>Fiuu_Payment_Log</code>, the latest successful row (<code>Status = '00'</code>) for the warranty."],
-  log:     ["Post log",   "<code>Emax_Post_Log</code>, the warranty's posting record."],
-  calc:    ["Calculated", "Worked out by the microsite. See Shared values."],
-  reply:   ["eMAX reply", "Read from eMAX's response."],
-  fixed:   ["Fixed",      "Always the same value."],
+  setting: ["Setting", "g-setting"],
+  header:  ["Warranty", "g-data"],
+  detail:  ["Tyres", "g-data"],
+  payment: ["Payment", "g-data"],
+  outlet:  ["Outlet", "g-data"],
+  fiuu:    ["Fiuu log", "g-data"],
+  log:     ["Post log", "g-data"],
+  reply:   ["eMAX reply", "g-data"],
+  calc:    ["Calculated", "g-calc"],
+  fixed:   ["Fixed", "g-fixed"],
 };
 
 // Rows: [field, kind, source, example]
@@ -461,21 +486,21 @@ const DATA = {
 
 const esc = (s) => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-document.getElementById("key").innerHTML =
-  Object.values(KINDS).map(([label, text]) => `<dt>${label}</dt><dd>${text}</dd>`).join("");
-
 for (const [id, rows] of Object.entries(DATA)) {
-  document.getElementById(id).innerHTML = rows.map(([f, kind, src, ex]) =>
-    `<tr${kind === "fixed" ? ' class="fixed"' : ""}>` +
-    `<td class="f">${esc(f)}</td>` +
-    `<td class="s"><span class="k">${KINDS[kind][0]}</span>${src}</td>` +
-    `<td class="e">${esc(ex)}</td></tr>`).join("");
+  document.getElementById(id).innerHTML = rows.map(([f, kind, src, ex]) => {
+    const [label, group] = KINDS[kind];
+    return `<tr${kind === "fixed" ? ' class="fixed"' : ""}>` +
+      `<td class="f">${esc(f)}</td>` +
+      `<td class="s"><span class="badge ${group}">${label}</span><span class="d">${src}</span></td>` +
+      `<td class="e">${esc(ex)}</td></tr>`;
+  }).join("");
 }
 
 // Find
 const q = document.getElementById("q");
-const rows = [...document.querySelectorAll("main tbody tr")].filter(r => r.closest("table").parentElement.className === "scroll");
+const rows = [...document.querySelectorAll(".tbl tbody tr")];
 const original = new Map(rows.map(r => [r, r.innerHTML]));
+const hideFixed = document.getElementById("hideFixed");
 
 function mark(html, term) {
   const re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
@@ -492,25 +517,23 @@ function apply() {
     r.hidden = !hit;
     if (hit) { shown++; if (term) r.innerHTML = mark(r.innerHTML, term); }
   }
-  // While searching, drop the intro and any section with no hits.
-  document.getElementById("top").hidden = !!lower;
-  document.getElementById("sources").hidden = !!lower;
-  document.querySelectorAll("main section").forEach(sec => {
-    if (sec.id === "sources") return;
-    const own = [...sec.querySelectorAll(".scroll tbody tr")];
-    sec.hidden = !!lower && own.every(r => r.hidden);
+  const searching = !!lower;
+  document.getElementById("top").hidden = searching;
+  document.querySelectorAll("section.card").forEach(sec => {
+    const own = [...sec.querySelectorAll(".tbl tbody tr")];
+    sec.hidden = searching && (own.length === 0 || own.every(r => r.hidden));
   });
-  document.querySelectorAll(".doc, .caption").forEach(el => el.hidden = !!lower);
-  document.getElementById("empty").hidden = !(lower && shown === 0);
+  document.querySelectorAll(".doc, .cap").forEach(el => el.hidden = searching);
+  document.getElementById("empty").hidden = !(searching && shown === 0);
   counts();
 }
 
 function counts() {
-  const hideFixed = document.body.classList.contains("hide-fixed");
+  const hide = hideFixed.checked;
   document.querySelectorAll("[data-count]").forEach(el => {
     const all = [...document.querySelectorAll("#" + el.dataset.count + " tr")];
-    const vis = all.filter(r => !r.hidden && !(hideFixed && r.classList.contains("fixed"))).length;
-    el.textContent = vis === all.length ? `${all.length} fields` : `${vis} of ${all.length} fields`;
+    const vis = all.filter(r => !r.hidden && !(hide && r.classList.contains("fixed"))).length;
+    el.textContent = vis === all.length ? String(all.length) : `${vis}/${all.length}`;
   });
 }
 
@@ -520,24 +543,22 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape" && document.activeElement === q) { q.value = ""; apply(); q.blur(); }
 });
 
-// Hide fixed values (remembered per browser)
-const hideFixed = document.getElementById("hideFixed");
 try { hideFixed.checked = localStorage.getItem("hideFixed") === "1"; } catch {}
-const setFixed = () => {
+function setFixed() {
   document.body.classList.toggle("hide-fixed", hideFixed.checked);
   try { localStorage.setItem("hideFixed", hideFixed.checked ? "1" : "0"); } catch {}
   counts();
-};
+}
 hideFixed.addEventListener("change", setFixed);
 setFixed();
 
-// Contents: mark the section in view
-const links = [...document.querySelectorAll(".toc a")];
+// Sidebar: highlight the section in view
+const links = [...document.querySelectorAll(".side a")];
 const obs = new IntersectionObserver(entries => {
   entries.forEach(en => {
     if (en.isIntersecting) links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id));
   });
-}, { rootMargin: "-80px 0px -70% 0px" });
+}, { rootMargin: "-90px 0px -65% 0px" });
 links.forEach(a => { const t = document.querySelector(a.getAttribute("href")); if (t) obs.observe(t); });
 </script>
 </body>
