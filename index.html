@@ -4,375 +4,395 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>eMAX Field Mapping</title>
-<meta name="description" content="Where every field the TPP RHP microsite sends to eMAX comes from — Cash Sale, payment receipt, customer pre-check and Cash Sale PDF.">
+<meta name="description" content="Where every field the TPP RHP microsite sends to eMAX comes from: Cash Sale, payment receipt, customer check and Cash Sale PDF.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* Layout: a reference sheet. Narrow contents rail on the left, one reading column of
+   rule-lined tables on the right. No cards; structure comes from type and hairlines. */
 :root {
-  --bg: #f6f7f9; --surface: #ffffff; --surface-2: #f1f3f6; --border: #e3e6eb;
-  --text: #1b2430; --muted: #5d6878; --faint: #8a94a3;
-  --accent: #1d5fd1; --accent-soft: #e8f0fd;
-  --code-bg: #f1f3f6;
-  --c-config: #1d5fd1;   --c-config-bg: #e8f0fd;
-  --c-header: #0f7a5c;   --c-header-bg: #e3f5ee;
-  --c-detail: #2f8a2f;   --c-detail-bg: #e8f6e5;
-  --c-payment: #8a4fd8;  --c-payment-bg: #f1eafd;
-  --c-outlet: #b4610a;   --c-outlet-bg: #fdf0e1;
-  --c-fiuu: #c0367a;     --c-fiuu-bg: #fce8f2;
-  --c-log: #4b5b70;      --c-log-bg: #e9edf2;
-  --c-calc: #a3780a;     --c-calc-bg: #fbf3dc;
-  --c-fixed: #6b7380;    --c-fixed-bg: #eef0f3;
-  --shadow: 0 1px 2px rgba(16,24,40,.05), 0 1px 3px rgba(16,24,40,.06);
+  --paper: #fbfbfa;
+  --ink: #1d232b;
+  --ink-2: #4f5a67;
+  --ink-3: #85909c;
+  --rule: #e2e4e7;
+  --rule-strong: #c9cdd2;
+  --wash: #f1f2f3;
+  --accent: #24508f;
+  --mark: #fff0b3;
+
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+
+  --step--1: .8125rem;
+  --step-0: .9375rem;
+  --step-1: 1.125rem;
+  --step-2: 1.5rem;
+  --step-3: 2rem;
+  color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f141b; --surface: #161d27; --surface-2: #1c2430; --border: #2a3442;
-    --text: #e6eaf0; --muted: #a2adbb; --faint: #7a8696;
-    --accent: #6ea2ff; --accent-soft: #1b2a44; --code-bg: #1c2430;
-    --c-config: #8db6ff;  --c-config-bg: #1b2a44;
-    --c-header: #5fd1ac;  --c-header-bg: #143329;
-    --c-detail: #7fd67f;  --c-detail-bg: #183318;
-    --c-payment: #c4a2ff; --c-payment-bg: #2a1f42;
-    --c-outlet: #f2ad62;  --c-outlet-bg: #3a2814;
-    --c-fiuu: #f58cbe;    --c-fiuu-bg: #3d1a2c;
-    --c-log: #aab7c8;     --c-log-bg: #232d3a;
-    --c-calc: #e9c35c;    --c-calc-bg: #382d12;
-    --c-fixed: #a2abb8;   --c-fixed-bg: #252d38;
-    --shadow: none;
+    --paper: #14171b; --ink: #e4e7eb; --ink-2: #a9b1bb; --ink-3: #737d88;
+    --rule: #262b31; --rule-strong: #353b43; --wash: #1b1f24;
+    --accent: #8fb3ea; --mark: #5a4a12;
+    color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0f141b; --surface: #161d27; --surface-2: #1c2430; --border: #2a3442;
-  --text: #e6eaf0; --muted: #a2adbb; --faint: #7a8696;
-  --accent: #6ea2ff; --accent-soft: #1b2a44; --code-bg: #1c2430;
-  --c-config: #8db6ff;  --c-config-bg: #1b2a44;
-  --c-header: #5fd1ac;  --c-header-bg: #143329;
-  --c-detail: #7fd67f;  --c-detail-bg: #183318;
-  --c-payment: #c4a2ff; --c-payment-bg: #2a1f42;
-  --c-outlet: #f2ad62;  --c-outlet-bg: #3a2814;
-  --c-fiuu: #f58cbe;    --c-fiuu-bg: #3d1a2c;
-  --c-log: #aab7c8;     --c-log-bg: #232d3a;
-  --c-calc: #e9c35c;    --c-calc-bg: #382d12;
-  --c-fixed: #a2abb8;   --c-fixed-bg: #252d38;
-  --shadow: none;
+  --paper: #14171b; --ink: #e4e7eb; --ink-2: #a9b1bb; --ink-3: #737d88;
+  --rule: #262b31; --rule-strong: #353b43; --wash: #1b1f24;
+  --accent: #8fb3ea; --mark: #5a4a12;
+  color-scheme: dark;
 }
+
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 76px; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 Inter, system-ui, -apple-system, Segoe UI, sans-serif; }
-code, .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: .86em; }
-code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; word-break: break-word; }
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 var(--step-0)/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code { font-family: var(--mono); font-size: .88em; color: var(--ink); }
+h1, h2, h3 { text-wrap: balance; font-weight: 600; margin: 0; }
+p { margin: 0; }
 
 /* Top bar */
-.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 20px; background: var(--surface); border-bottom: 1px solid var(--border); }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; white-space: nowrap; }
-.brand .logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, #1d5fd1, #0f7a5c); color: #fff; display: grid; place-items: center; font-size: 14px; }
-.brand small { font-weight: 500; color: var(--muted); }
-.search { flex: 1; max-width: 460px; margin-left: auto; position: relative; }
-.search input { width: 100%; height: 38px; padding: 0 12px 0 36px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); color: var(--text); font: inherit; outline: none; }
-.search input:focus { border-color: var(--accent); background: var(--surface); }
-.search svg { position: absolute; left: 11px; top: 11px; color: var(--faint); }
-.iconbtn { width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--muted); display: grid; place-items: center; cursor: pointer; flex: none; }
-.iconbtn:hover { color: var(--text); }
-.menubtn { display: none; }
+.bar {
+  position: sticky; top: 0; z-index: 10; background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+.bar-in {
+  max-width: 1180px; margin: 0 auto; height: 56px;
+  display: flex; align-items: center; gap: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.name { font-weight: 600; white-space: nowrap; }
+.name span { color: var(--ink-3); font-weight: 400; }
+.find { margin-left: auto; display: flex; align-items: center; gap: 16px; min-width: 0; flex: 0 1 380px; }
+.find input {
+  width: 100%; min-width: 0; height: 34px; padding: 0 10px;
+  font: inherit; font-size: var(--step--1); color: var(--ink);
+  background: var(--wash); border: 1px solid var(--rule); border-radius: 4px;
+}
+.find input::placeholder { color: var(--ink-3); }
+.toggle { display: flex; align-items: center; gap: 6px; font-size: var(--step--1); color: var(--ink-2); white-space: nowrap; cursor: pointer; }
+.toggle input { margin: 0; accent-color: var(--accent); }
 
-/* Layout */
-.layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); max-width: 1320px; margin: 0 auto; }
-nav.side { position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; padding: 24px 16px 40px 20px; border-right: 1px solid var(--border); }
-nav.side .group { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin: 18px 8px 6px; }
-nav.side a { display: block; padding: 6px 10px; border-radius: 8px; color: var(--muted); font-size: 14px; }
-nav.side a.sub { padding-left: 24px; font-size: 13px; }
-nav.side a:hover { background: var(--surface-2); color: var(--text); text-decoration: none; }
-nav.side a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
-main { padding: 32px 40px 80px; min-width: 0; }
+/* Page */
+.page {
+  max-width: 1180px; margin: 0 auto;
+  display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px;
+  padding: 48px max(16px, env(safe-area-inset-right, 0px)) 96px max(16px, env(safe-area-inset-left, 0px));
+}
+.toc { position: sticky; top: 104px; align-self: start; font-size: var(--step--1); }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: block; padding: 3px 0; color: var(--ink-2); text-decoration: none; }
+.toc a:hover { color: var(--ink); }
+.toc a.on { color: var(--ink); font-weight: 600; }
+.toc .sub a { padding-left: 14px; color: var(--ink-3); }
+.toc .sub a.on { color: var(--ink); }
+.toc .label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 18px 0 6px; }
+.toc .label:first-child { margin-top: 0; }
 
-/* Hero */
-.hero h1 { font-size: 30px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -.01em; }
-.hero p { margin: 0; color: var(--muted); max-width: 760px; }
-.flow { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 24px 0 8px; }
-.flow .step { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); }
-.flow .step b { display: block; font-size: 14px; }
-.flow .step span { color: var(--muted); font-size: 13px; }
-.flow .step .n { width: 22px; height: 22px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 700; display: inline-grid; place-items: center; margin-bottom: 6px; }
+main { min-width: 0; }
+.intro { max-width: 68ch; display: grid; gap: 14px; }
+.intro h1 { font-size: var(--step-3); line-height: 1.2; letter-spacing: -.015em; }
+.intro p { color: var(--ink-2); }
+.seq {
+  margin-top: 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px;
+  font-size: var(--step--1); color: var(--ink-2);
+}
+.seq b { color: var(--ink); font-weight: 500; }
+.seq i { font-style: normal; color: var(--ink-3); }
 
-/* Sections */
-section { margin-top: 44px; }
-h2 { font-size: 22px; margin: 0 0 6px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-h3 { font-size: 16px; margin: 26px 0 8px; }
-.endpoint { display: inline-flex; align-items: center; gap: 8px; margin: 4px 0 10px; padding: 6px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-family: "JetBrains Mono", monospace; font-size: 13px; max-width: 100%; overflow-x: auto; white-space: nowrap; }
-.verb { font-weight: 700; font-size: 11px; padding: 2px 6px; border-radius: 4px; color: #fff; }
-.verb.post { background: #0f7a5c; } .verb.get { background: #1d5fd1; }
-.lead { color: var(--muted); margin: 0 0 12px; max-width: 820px; }
-.callout { border: 1px solid var(--border); border-left: 4px solid var(--c-calc); background: var(--surface); border-radius: 10px; padding: 12px 16px; margin: 14px 0; font-size: 14px; }
-.callout.info { border-left-color: var(--accent); }
-.callout b { display: block; margin-bottom: 2px; }
+section { margin-top: 64px; display: grid; gap: 14px; }
+section > header { display: grid; gap: 8px; max-width: 72ch; }
+h2 { font-size: var(--step-2); letter-spacing: -.01em; line-height: 1.3; }
+h3 { font-size: var(--step-1); margin-top: 22px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+h3 .n { font-size: var(--step--1); font-weight: 400; color: var(--ink-3); }
+.lede { color: var(--ink-2); max-width: 72ch; }
+.call {
+  font-family: var(--mono); font-size: var(--step--1); color: var(--ink-2);
+  overflow-x: auto; white-space: nowrap;
+}
+.call b { color: var(--ink); font-weight: 500; margin-right: 8px; }
+.note { font-size: var(--step--1); color: var(--ink-2); max-width: 72ch; padding-top: 10px; border-top: 1px solid var(--rule); }
+.note strong { color: var(--ink); font-weight: 600; }
 
 /* Tables */
-.tablewrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; box-shadow: var(--shadow); }
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding: 10px 14px; background: var(--surface-2); border-bottom: 1px solid var(--border); white-space: nowrap; }
-td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
-tr:last-child td { border-bottom: 0; }
-tbody tr:hover td { background: var(--surface-2); }
-td.field { white-space: nowrap; font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500; }
-td.ex { font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--muted); word-break: break-word; min-width: 140px; }
-td.src { min-width: 300px; }
-.chip { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; margin-right: 6px; vertical-align: 1px; white-space: nowrap; }
-.chip.config  { color: var(--c-config);  background: var(--c-config-bg); }
-.chip.header  { color: var(--c-header);  background: var(--c-header-bg); }
-.chip.detail  { color: var(--c-detail);  background: var(--c-detail-bg); }
-.chip.payment { color: var(--c-payment); background: var(--c-payment-bg); }
-.chip.outlet  { color: var(--c-outlet);  background: var(--c-outlet-bg); }
-.chip.fiuu    { color: var(--c-fiuu);    background: var(--c-fiuu-bg); }
-.chip.log     { color: var(--c-log);     background: var(--c-log-bg); }
-.chip.calc    { color: var(--c-calc);    background: var(--c-calc-bg); }
-.chip.fixed   { color: var(--c-fixed);   background: var(--c-fixed-bg); }
-tr.hidden { display: none; }
-mark { background: #ffe58a; color: inherit; border-radius: 2px; padding: 0 1px; }
-:root[data-theme="dark"] mark { background: #6b5a12; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) mark { background: #6b5a12; } }
-
-/* Legend + filters */
-.legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
-.legend button { border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 999px; padding: 4px 10px 4px 6px; font: inherit; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; }
-.legend button[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
-.legend button .chip { margin-right: 4px; }
-.noresults { display: none; margin-top: 18px; padding: 18px; text-align: center; color: var(--muted); border: 1px dashed var(--border); border-radius: 12px; }
-.count { font-size: 12px; font-weight: 500; color: var(--faint); }
-footer { margin-top: 60px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--faint); font-size: 13px; }
-
-@media (max-width: 960px) {
-  .layout { grid-template-columns: 1fr; }
-  nav.side { position: fixed; top: 60px; left: 0; width: 280px; z-index: 15; background: var(--surface); transform: translateX(-100%); transition: transform .2s; }
-  nav.side.open { transform: none; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
-  .menubtn { display: grid; }
-  main { padding: 24px 16px 60px; }
-  .flow { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .brand small { display: none; }
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: var(--step--1); line-height: 1.5; }
+thead th {
+  text-align: left; font-weight: 500; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-3); padding: 0 16px 8px 0; border-bottom: 1px solid var(--rule-strong);
 }
-@media (max-width: 520px) {
-  .flow { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 24px; }
-  .topbar { padding: 0 12px; gap: 8px; }
-  .brand .title { display: none; }
+tbody td { padding: 10px 16px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td.f { font-family: var(--mono); font-weight: 500; white-space: nowrap; width: 1%; }
+td.s { min-width: 280px; color: var(--ink); }
+td.s .k { display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 1px; }
+td.e { font-family: var(--mono); color: var(--ink-2); width: 30%; min-width: 150px; word-break: break-word; font-variant-numeric: tabular-nums; }
+tr.fixed td { color: var(--ink-3); }
+tr.fixed td.f { color: var(--ink-2); font-weight: 400; }
+tr.fixed td.s code { color: var(--ink-3); }
+body.hide-fixed tr.fixed { display: none; }
+tr[hidden] { display: none; }
+mark { background: var(--mark); color: inherit; border-radius: 2px; }
+
+/* Sources key */
+dl.key { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 24px; margin: 0; font-size: var(--step--1); max-width: 80ch; }
+dl.key dt { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding-top: 2px; }
+dl.key dd { margin: 0; color: var(--ink-2); }
+
+/* Print-line mock: the eMAX Cash Sale line as printed */
+.doc { border: 1px solid var(--rule-strong); border-radius: 2px; overflow-x: auto; }
+.doc table { font-size: 12.5px; min-width: 620px; }
+.doc thead th { padding: 8px 12px; color: var(--ink-2); border-bottom: 1px solid var(--rule-strong); background: var(--wash); }
+.doc td { padding: 10px 12px; border: 0; }
+.doc td.num, .doc th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.doc .rem { display: block; color: var(--ink-2); }
+.doc .tag { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--accent); margin-top: 6px; }
+.doc .tot td { border-top: 1px solid var(--rule); font-weight: 600; }
+.caption { font-size: var(--step--1); color: var(--ink-3); }
+
+.empty { margin-top: 40px; color: var(--ink-2); }
+footer { margin-top: 80px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: var(--step--1); color: var(--ink-3); }
+
+@media (max-width: 900px) {
+  .page { grid-template-columns: minmax(0, 1fr); padding-top: 32px; }
+  .toc { display: none; }
+}
+@media (max-width: 560px) {
+  .bar-in { gap: 12px; }
+  .name span { display: none; }
+  .find { gap: 10px; }
+  .intro h1 { font-size: 1.625rem; }
+  dl.key { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  dl.key dd { margin-bottom: 8px; }
 }
 </style>
 </head>
 <body>
-<header class="topbar">
-  <button class="iconbtn menubtn" id="menuBtn" aria-label="Open menu">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-  </button>
-  <div class="brand"><div class="logo">e</div><span class="title">eMAX Field Mapping</span> <small>· TPP RHP Microsite</small></div>
-  <div class="search">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-    <input id="q" type="search" placeholder="Search fields, sources, values…  ( / )" autocomplete="off">
+<div class="bar">
+  <div class="bar-in">
+    <div class="name">eMAX Field Mapping <span>· TPP RHP microsite</span></div>
+    <div class="find">
+      <input id="q" type="search" placeholder="Find a field or value  ( / )" autocomplete="off" aria-label="Find a field or value">
+      <label class="toggle" for="hideFixed"><input type="checkbox" id="hideFixed"><span>Hide fixed</span></label>
+    </div>
   </div>
-  <button class="iconbtn" id="themeBtn" aria-label="Toggle theme">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-  </button>
-</header>
+</div>
 
-<div class="layout">
-  <nav class="side" id="side">
-    <div class="group">Overview</div>
-    <a href="#overview">How it works</a>
-    <a href="#legend">Reading the tables</a>
-    <a href="#values">Shared values</a>
-    <div class="group">Requests to eMAX</div>
-    <a href="#sales">1 · Cash Sale</a>
-    <a class="sub" href="#sales-header">Header</a>
-    <a class="sub" href="#sales-line">Line</a>
-    <a href="#payment">2 · Payment receipt</a>
-    <a class="sub" href="#payment-header">Header</a>
-    <a class="sub" href="#payment-line">Line</a>
-    <a href="#customer">3 · Customer pre-check</a>
-    <a href="#pdf">4 · Cash Sale PDF</a>
-    <a class="sub" href="#pdf-token">AppWA token</a>
-    <div class="group">Results</div>
-    <a href="#log">5 · What we save</a>
+<div class="page">
+  <nav class="toc" aria-label="Contents">
+    <div class="label">Overview</div>
+    <ol>
+      <li><a href="#top">How posting works</a></li>
+      <li><a href="#sources">Where values come from</a></li>
+      <li><a href="#values">Shared values</a></li>
+    </ol>
+    <div class="label">Requests</div>
+    <ol>
+      <li><a href="#sales">Cash Sale</a></li>
+      <li class="sub"><a href="#sales-header">Header</a></li>
+      <li class="sub"><a href="#sales-line">Line</a></li>
+      <li><a href="#payment">Payment receipt</a></li>
+      <li class="sub"><a href="#payment-header">Header</a></li>
+      <li class="sub"><a href="#payment-line">Line</a></li>
+      <li><a href="#customer">Customer check</a></li>
+      <li><a href="#pdf">Cash Sale PDF</a></li>
+    </ol>
+    <div class="label">Results</div>
+    <ol>
+      <li><a href="#log">What we save</a></li>
+    </ol>
   </nav>
 
   <main>
-    <div class="hero" id="overview">
+    <div class="intro" id="top">
       <h1>Where every eMAX field comes from</h1>
-      <p>When a customer pays for an RHP warranty on the microsite, it is posted to the eMAX accounting system as a Cash Sale plus a payment receipt. This page lists every field we send, where its value comes from, and an example.</p>
-      <div class="flow">
-        <div class="step"><div class="n">1</div><b>Customer pays</b><span>Fiuu webhook marks the warranty <code>Paid</code></span></div>
-        <div class="step"><div class="n">2</div><b>Customer check</b><span><code>GetCust</code> confirms the cash customer exists</span></div>
-        <div class="step"><div class="n">3</div><b>Cash Sale</b><span><code>ImportSales</code> → eMAX returns a CS number</span></div>
-        <div class="step"><div class="n">4</div><b>Payment receipt</b><span><code>ImportPayment</code> settles that CS → OR number</span></div>
+      <p>When a customer pays for an RHP warranty on the microsite, it is posted to eMAX as a Cash Sale and a payment receipt. Each table below lists a field eMAX receives, where its value comes from, and an example.</p>
+      <p>The example throughout is warranty <code>RHP-20261105-E94325329</code>: 4 tyres, paid RM&nbsp;108.00 including 8% SST.</p>
+      <div class="seq" aria-label="Posting sequence">
+        <b>Payment recorded</b><i>→</i><b>Customer check</b><i>→</i><b>Cash Sale</b><i>(returns CS no.)</i><i>→</i><b>Payment receipt</b><i>(returns OR no.)</i>
       </div>
-      <div class="callout info"><b>Posted once, retried by hand</b>Posting runs once, automatically, after payment. If it fails, an alert email is sent and the warranty stays <code>Failed</code> until someone checks eMAX and retries with <code>POST api/emax/post/{warrantyId}</code>. Nothing is retried automatically.</div>
+      <p class="note">Posting runs once, right after payment. If it fails, an alert email is sent and nothing is retried automatically. Check eMAX first, then retry with <code>POST api/emax/post/{warrantyId}</code>.</p>
     </div>
 
-    <section id="legend">
-      <h2>Reading the tables</h2>
-      <p class="lead">Each source is tagged. Click a tag to show only the fields that come from it.</p>
-      <div class="tablewrap"><table>
-        <thead><tr><th>Tag</th><th>Means</th></tr></thead>
-        <tbody id="legendTable"></tbody>
-      </table></div>
-      <div class="legend" id="legendFilters"></div>
+    <section id="sources">
+      <header><h2>Where values come from</h2></header>
+      <dl class="key" id="key"></dl>
     </section>
 
     <section id="values">
-      <h2>Shared values</h2>
-      <p class="lead">Worked out once and used in several fields. Example used throughout: warranty <code>RHP-20261105-E94325329</code>, 4 tyres, paid <b>RM 108.00</b> including 8% SST.</p>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>Name</th><th>How it is worked out</th><th>Example</th></tr></thead>
-        <tbody id="t-values"></tbody>
-      </table></div>
+      <header>
+        <h2>Shared values</h2>
+        <p class="lede">Worked out once and reused by several fields.</p>
+      </header>
+      <div class="scroll"><table><thead><tr><th>Value</th><th>How it is worked out</th><th>Example</th></tr></thead><tbody id="t-values"></tbody></table></div>
     </section>
 
     <section id="sales">
-      <h2>1 · Cash Sale</h2>
-      <div class="endpoint"><span class="verb post">POST</span>{EmaxWebAPIUrl}/Sales?Method=ImportSales</div>
-      <p class="lead">Sent as a JSON <b>array</b> with one header. Before anything is sent, the post fails if any of these settings is blank: <code>EmaxBranchCode</code>, <code>EmaxCustomerCode</code>, <code>EmaxItemCode_{plan}</code> (or <code>EmaxItemCode</code>), <code>EmaxPaymentType</code>, <code>EmaxPaymentAccountCode</code>.</p>
-      <h3 id="sales-header">Header <span class="count" data-count="t-sales-header"></span></h3>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead>
-        <tbody id="t-sales-header"></tbody>
-      </table></div>
-      <h3 id="sales-line">Line — <code>ItemDetails[0]</code> <span class="count" data-count="t-sales-line"></span></h3>
-      <p class="lead">The whole warranty is posted as <b>one line</b>, not one line per tyre. The tyres are summarised in the line's <code>Remark</code>, which eMAX prints under the description.</p>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead>
-        <tbody id="t-sales-line"></tbody>
-      </table></div>
-      <div class="callout"><b>Pricing</b>The line is priced from what the customer <b>paid</b>, not from the tyre prices in <code>RHP_Warranty_Reg_Detail.Price</code>. When 3 tyres are billed as 4 × the unit price, that billed amount is what appears here.</div>
+      <header>
+        <h2>Cash Sale</h2>
+        <div class="call"><b>POST</b>{EmaxWebAPIUrl}/Sales?Method=ImportSales</div>
+        <p class="lede">A JSON array with one sales header. Nothing is sent if any of these settings is blank: <code>EmaxBranchCode</code>, <code>EmaxCustomerCode</code>, <code>EmaxItemCode_{plan}</code> (or <code>EmaxItemCode</code>), <code>EmaxPaymentType</code>, <code>EmaxPaymentAccountCode</code>.</p>
+      </header>
+
+      <div class="doc" role="figure" aria-label="How the line prints on the eMAX Cash Sale">
+        <table>
+          <thead><tr><th>No</th><th>Description</th><th class="num">Qty</th><th>UOM</th><th class="num">U.Price</th><th class="num">Disc.</th><th class="num">SST</th><th class="num">Amount</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>RHP Road Hazard Protection Warranty - RHP-20261105-E94325329
+                <span class="rem">Plate VJH988 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V</span>
+                <span class="tag">ItemDescription · Remark</span></td>
+              <td class="num">1.0<span class="tag">Quantity</span></td>
+              <td>UNIT<span class="tag">UOMCode</span></td>
+              <td class="num">100.00<span class="tag">UnitPrice</span></td>
+              <td class="num">0.00<span class="tag">DiscountAmount</span></td>
+              <td class="num">8.00<span class="tag">TaxAmount</span></td>
+              <td class="num">108.00<span class="tag">TotalAmountWithTax</span></td>
+            </tr>
+            <tr class="tot"><td></td><td>Total</td><td></td><td></td><td></td><td></td><td class="num">8.00</td><td class="num">108.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">How the single warranty line prints on the eMAX Cash Sale, with the field that fills each column.</p>
+
+      <h3 id="sales-header">Header <span class="n" data-count="t-sales-header"></span></h3>
+      <div class="scroll"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-sales-header"></tbody></table></div>
+
+      <h3 id="sales-line">Line <code>ItemDetails[0]</code> <span class="n" data-count="t-sales-line"></span></h3>
+      <p class="lede">The whole warranty is one line. The tyres are summarised in its remark.</p>
+      <div class="scroll"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-sales-line"></tbody></table></div>
+      <p class="note"><strong>Pricing.</strong> The line is priced from what the customer paid, not from the tyre prices in <code>RHP_Warranty_Reg_Detail.Price</code>. When 3 tyres are billed as 4 × the unit price, the billed amount is what appears here.</p>
     </section>
 
     <section id="payment">
-      <h2>2 · Payment receipt</h2>
-      <div class="endpoint"><span class="verb post">POST</span>{EmaxWebAPIUrl}/ReceivePayment?Method=ImportPayment</div>
-      <p class="lead">Sent only after the Cash Sale succeeded, as a JSON <b>array</b> with one header. There is no <code>DocumentType</code> field — it is struck out in the eMAX spec.</p>
-      <h3 id="payment-header">Header <span class="count" data-count="t-payment-header"></span></h3>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead>
-        <tbody id="t-payment-header"></tbody>
-      </table></div>
-      <h3 id="payment-line">Line — <code>ItemDetails[0]</code> <span class="count" data-count="t-payment-line"></span></h3>
-      <p class="lead">Links the receipt to the Cash Sale it pays.</p>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead>
-        <tbody id="t-payment-line"></tbody>
-      </table></div>
+      <header>
+        <h2>Payment receipt</h2>
+        <div class="call"><b>POST</b>{EmaxWebAPIUrl}/ReceivePayment?Method=ImportPayment</div>
+        <p class="lede">Sent only after the Cash Sale succeeds, as a JSON array with one receipt. It has no <code>DocumentType</code> field.</p>
+      </header>
+      <h3 id="payment-header">Header <span class="n" data-count="t-payment-header"></span></h3>
+      <div class="scroll"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-payment-header"></tbody></table></div>
+      <h3 id="payment-line">Line <code>ItemDetails[0]</code> <span class="n" data-count="t-payment-line"></span></h3>
+      <p class="lede">Links the receipt to the Cash Sale it pays.</p>
+      <div class="scroll"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-payment-line"></tbody></table></div>
     </section>
 
     <section id="customer">
-      <h2>3 · Customer pre-check</h2>
-      <div class="endpoint"><span class="verb get">GET</span>{EmaxWebAPIUrl}/Customerstd?Method=GetCust&amp;Keyword=…</div>
-      <p class="lead">Runs before the Cash Sale unless <code>EmaxCheckCustomer</code> is <code>'false'</code>. If eMAX finds no customer, the post fails and nothing is sent.</p>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>Parameter</th><th>Source</th><th>Example</th></tr></thead>
-        <tbody id="t-customer"></tbody>
-      </table></div>
+      <header>
+        <h2>Customer check</h2>
+        <div class="call"><b>GET</b>{EmaxWebAPIUrl}/Customerstd?Method=GetCust&amp;Keyword=…</div>
+        <p class="lede">Runs before the Cash Sale unless <code>EmaxCheckCustomer</code> is <code>false</code>. If eMAX finds no customer, nothing is posted.</p>
+      </header>
+      <div class="scroll"><table><thead><tr><th>Parameter</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-customer"></tbody></table></div>
     </section>
 
     <section id="pdf">
-      <h2>4 · Cash Sale PDF</h2>
-      <div class="endpoint"><span class="verb get">GET</span>{EmaxWebAPIUrl}/AppWA/Sales/GetSalesPdf</div>
-      <p class="lead">Called when a user clicks <b>Cash Sale</b> on the Status page. It is a GET that carries a JSON body. eMAX returns a print link; the microsite downloads the PDF and shows it in the browser.</p>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>Field</th><th>Source</th><th>Example</th></tr></thead>
-        <tbody id="t-pdf"></tbody>
-      </table></div>
-      <h3 id="pdf-token">AppWA token claims <span class="count" data-count="t-token"></span></h3>
-      <p class="lead">Built and encrypted by the microsite itself (signed HS256, then encrypted A256KW / A256CBC-HS512), valid for 1 hour. It is never sent to the browser.</p>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>Claim</th><th>Source</th><th>Example</th></tr></thead>
-        <tbody id="t-token"></tbody>
-      </table></div>
+      <header>
+        <h2>Cash Sale PDF</h2>
+        <div class="call"><b>GET</b>{EmaxWebAPIUrl}/AppWA/Sales/GetSalesPdf</div>
+        <p class="lede">Called when someone clicks Cash Sale on the Status page. It is a GET with a JSON body. eMAX returns a print link, and the microsite downloads the PDF and shows it.</p>
+      </header>
+      <div class="scroll"><table><thead><tr><th>Field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-pdf"></tbody></table></div>
+      <h3 id="pdf-token">Bearer token claims <span class="n" data-count="t-token"></span></h3>
+      <p class="lede">The microsite builds this token itself (signed HS256, then encrypted A256KW / A256CBC-HS512). It is valid for one hour and never reaches the browser.</p>
+      <div class="scroll"><table><thead><tr><th>Claim</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-token"></tbody></table></div>
     </section>
 
     <section id="log">
-      <h2>5 · What we save from eMAX's replies</h2>
-      <p class="lead">Everything is kept in <code>Emax_Post_Log</code>, one row per warranty. The Status page's <b>Cash Sale</b> button appears once <code>InvoiceDocNo</code> is filled.</p>
-      <div class="tablewrap"><table data-searchable>
-        <thead><tr><th>Column</th><th>Comes from</th><th>Example</th></tr></thead>
-        <tbody id="t-log"></tbody>
-      </table></div>
+      <header>
+        <h2>What we save</h2>
+        <p class="lede">Each warranty has one row in <code>Emax_Post_Log</code>. The Cash Sale button on the Status page appears once <code>InvoiceDocNo</code> is filled.</p>
+      </header>
+      <div class="scroll"><table><thead><tr><th>Column</th><th>Comes from</th><th>Example</th></tr></thead><tbody id="t-log"></tbody></table></div>
     </section>
 
-    <div class="noresults" id="noResults">No fields match your search.</div>
+    <p class="empty" id="empty" hidden>No field matches that search.</p>
 
-    <footer>Generated from the microsite source (<code>EmaxPostingService.BuildSales</code> / <code>BuildPayment</code>, <code>EmaxClient</code>, <code>AppWAToken</code>). Last updated 05/11/2026.</footer>
+    <footer>Taken from the microsite source: <code>EmaxPostingService</code> (BuildSales, BuildPayment), <code>EmaxClient</code>, <code>AppWAToken</code>. Updated 05/11/2026.</footer>
   </main>
 </div>
 
 <script>
-// Source tags: [key, label, meaning]
-const TAGS = [
-  ["config",  "Config",  "A setting in <code>Master_SystemInformation</code> — the <code>Value</code> where <code>Parameter</code> is the name shown."],
-  ["header",  "Header",  "A column of <code>RHP_Warranty_Reg_Header</code> for the warranty being posted."],
-  ["detail",  "Detail",  "A column of <code>RHP_Warranty_Reg_Detail</code> — the warranty's tyre rows."],
-  ["payment", "Payment", "A column of <code>RHP_Payment</code>, joined on <code>Header.PaymentID</code>."],
-  ["outlet",  "Outlet",  "A column of <code>Master_Customer</code>, joined on <code>Header.CustomerID</code> (the outlet chosen at registration)."],
-  ["fiuu",    "Fiuu log","<code>Fiuu_Payment_Log</code> — latest row with <code>OrderID = WarrantyRefNo</code> and <code>Status = '00'</code>."],
-  ["log",     "Post log","A column of <code>Emax_Post_Log</code> for the warranty."],
-  ["calc",    "Worked out", "Calculated by the microsite — see Shared values."],
-  ["fixed",   "Fixed",   "Always the same value, set in the microsite code."],
-];
-const chip = (k) => { const t = TAGS.find(x => x[0] === k); return `<span class="chip ${k}">${t[1]}</span>`; };
+// Source kinds: key → [label, meaning]
+const KINDS = {
+  setting: ["Setting",    "<code>Master_SystemInformation</code>, the <code>Value</code> for the parameter named."],
+  header:  ["Warranty",   "<code>RHP_Warranty_Reg_Header</code>, the warranty being posted."],
+  detail:  ["Tyre rows",  "<code>RHP_Warranty_Reg_Detail</code>, the warranty's tyres."],
+  payment: ["Payment",    "<code>RHP_Payment</code>, joined on the warranty's <code>PaymentID</code>."],
+  outlet:  ["Outlet",     "<code>Master_Customer</code>, the outlet chosen at registration."],
+  fiuu:    ["Fiuu log",   "<code>Fiuu_Payment_Log</code>, the latest successful row (<code>Status = '00'</code>) for the warranty."],
+  log:     ["Post log",   "<code>Emax_Post_Log</code>, the warranty's posting record."],
+  calc:    ["Calculated", "Worked out by the microsite. See Shared values."],
+  reply:   ["eMAX reply", "Read from eMAX's response."],
+  fixed:   ["Fixed",      "Always the same value."],
+};
 
-// Rows: [field, tag(s), source html, example]
+// Rows: [field, kind, source, example]
 const DATA = {
   "t-values": [
-    ["Paid total", "header", "<code>TotalAmountIncSST</code> → else <code>TotalAmount</code> → else <code>0</code>. What the customer paid through Fiuu, SST included.", "108.00"],
-    ["SST %", "header", "<code>SST</code> (a percentage).", "8"],
+    ["Paid total", "header", "<code>TotalAmountIncSST</code>, else <code>TotalAmount</code>. What the customer paid, SST included.", "108.00"],
+    ["SST %", "header", "<code>SST</code>", "8"],
     ["Amount ex-SST", "calc", "Paid total ÷ (1 + SST % ÷ 100), rounded to 2 decimals.", "100.00"],
-    ["SST amount", "calc", "Paid total − Amount ex-SST. Done by subtraction so the parts always add up to the paid total exactly.", "8.00"],
-    ["Reference", "calc", "<code>Header.WarrantyRefNo</code> with the dashes removed, max 20 characters.", "RHP20261105E94325329"],
-    ["Sale date", "header", "<code>PaymentDate</code> → else the current time.", "2026-11-05T14:10:50"],
-    ["Now", "calc", "The server's local time when the request is built.", "2026-11-05T14:19:17"],
+    ["SST amount", "calc", "Paid total − amount ex-SST, so the parts always add up to the paid total.", "8.00"],
+    ["Reference", "calc", "<code>WarrantyRefNo</code> without dashes, at most 20 characters.", "RHP20261105E94325329"],
+    ["Sale date", "header", "<code>PaymentDate</code>, else the current time.", "2026-11-05T14:10:50"],
+    ["Now", "calc", "Server time when the request is built.", "2026-11-05T14:19:17"],
   ],
   "t-sales-header": [
-    ["InvoiceNumber", "fixed", "<code>null</code> — eMAX generates the CS number.", "null"],
+    ["InvoiceNumber", "fixed", "<code>null</code>, so eMAX assigns the CS number.", "null"],
     ["InvoiceDate", "calc", "Sale date.", "2026-11-05T14:10:50"],
-    ["SalesType", "fixed", "<code>\"CS\"</code> (Cash Sale).", "CS"],
-    ["BranchCode", "config", "<code>EmaxBranchCode</code>", "MICHELIN-MY"],
+    ["SalesType", "fixed", "<code>CS</code> (Cash Sale).", "CS"],
+    ["BranchCode", "setting", "<code>EmaxBranchCode</code>", "MICHELIN-MY"],
     ["SalesManagerCode", "fixed", "<code>null</code>", "null"],
     ["SalesmanCode", "fixed", "<code>null</code>", "null"],
-    ["CustomerCode", "config", "<code>EmaxCustomerCode</code> — one cash customer for every consumer sale.", "CASH SALES"],
-    ["ContactPerson", "header", "<code>UserName</code> (max 100).", "BRIAN"],
-    ["ContactNumber", "header", "<code>UserPhone</code>, with <code>+60…</code> changed to local <code>0…</code>.", "0123456789"],
+    ["CustomerCode", "setting", "<code>EmaxCustomerCode</code>. One cash customer for every consumer sale.", "CASH SALES"],
+    ["ContactPerson", "header", "<code>UserName</code>, at most 100 characters.", "BRIAN"],
+    ["ContactNumber", "header", "<code>UserPhone</code>, with <code>+60</code> changed to <code>0</code>.", "0123456789"],
     ["Address1 / 2 / 3", "fixed", "<code>null</code>", "null"],
     ["ProjectNo", "fixed", "<code>null</code>", "null"],
     ["ReminderNote", "fixed", "<code>null</code>", "null"],
     ["CustomerShipToCode", "fixed", "<code>null</code>", "null"],
     ["DeliveryDateTime", "calc", "Sale date.", "2026-11-05T14:10:50"],
     ["PONumber", "fixed", "<code>null</code>", "null"],
-    ["ReferenceNumber", "calc", "Reference (max 20).", "RHP20261105E94325329"],
-    ["InvoiceRemark", "header outlet", "<code>\"RHP warranty {Header.WarrantyRefNo} | Plate {Header.PlateNumber} | Outlet {Outlet.CustomerName}\"</code> (max 500).", "RHP warranty RHP-20261105-E94325329 | Plate VJH988 | Outlet (NG) SENG BEE SDN BHD"],
+    ["ReferenceNumber", "calc", "Reference.", "RHP20261105E94325329"],
+    ["InvoiceRemark", "header", "<code>RHP warranty {WarrantyRefNo} | Plate {PlateNumber} | Outlet {outlet name}</code>, at most 500 characters. The outlet name comes from <code>Master_Customer</code>.", "RHP warranty RHP-20261105-E94325329 | Plate VJH988 | Outlet (NG) SENG BEE SDN BHD"],
     ["DeliveryRemark", "fixed", "<code>null</code>", "null"],
-    ["CurrencyCode", "fixed", "<code>\"MYR\"</code>", "MYR"],
+    ["CurrencyCode", "fixed", "<code>MYR</code>", "MYR"],
     ["CurrencyRate", "fixed", "<code>1</code>", "1"],
-    ["TotalServiceAmount", "calc", "Amount ex-SST — the warranty is booked as a service.", "100.00"],
+    ["TotalServiceAmount", "calc", "Amount ex-SST. The warranty is booked as a service.", "100.00"],
     ["TotalServiceTaxAmount", "calc", "SST amount.", "8.00"],
     ["TotalPartAmount", "fixed", "<code>0</code>", "0"],
     ["SubTotalAmount", "calc", "Amount ex-SST.", "100.00"],
     ["OtherChargeAmount", "fixed", "<code>0</code>", "0"],
     ["DiscountAmount", "fixed", "<code>0</code>", "0"],
     ["TotalAmount", "calc", "Paid total.", "108.00"],
-    ["DepositAmount", "calc", "Paid total — a Cash Sale is fully paid up front.", "108.00"],
+    ["DepositAmount", "calc", "Paid total. A Cash Sale is paid in full up front.", "108.00"],
     ["BalanceAmount", "fixed", "<code>0</code>", "0"],
-    ["TotalItems", "fixed", "Number of lines — always <code>1</code>.", "1"],
-    ["ShipType", "fixed", "<code>\"NORMAL\"</code>", "NORMAL"],
-    ["CreatedBy / ModifiedBy", "fixed", "<code>\"SYSTEM\"</code>", "SYSTEM"],
+    ["TotalItems", "fixed", "<code>1</code>, the number of lines.", "1"],
+    ["ShipType", "fixed", "<code>NORMAL</code>", "NORMAL"],
+    ["CreatedBy / ModifiedBy", "fixed", "<code>SYSTEM</code>", "SYSTEM"],
     ["CreationDateTime / ModificationDateTime", "calc", "Now.", "2026-11-05T14:19:17"],
     ["PaymentDueDate", "fixed", "<code>null</code>", "null"],
     ["IsClosed", "fixed", "<code>false</code>", "false"],
     ["RecipientSignature / AuthorizeSignature", "fixed", "<code>null</code>", "null"],
-    ["ItemDetails", "calc", "One line — see the Line table below. Must be named <code>ItemDetails</code>; eMAX ignores <code>Items</code>.", "[ … ]"],
+    ["ItemDetails", "calc", "The one line below. It must be named <code>ItemDetails</code>; eMAX ignores <code>Items</code>.", "[ 1 line ]"],
   ],
   "t-sales-line": [
     ["LineNumber", "fixed", "<code>1</code>", "1"],
-    ["ItemCode", "config header", "<code>EmaxItemCode_{plan}</code>, where plan = <code>Header.WarrantyPlanCode</code> (default <code>RHP</code>) — e.g. <code>EmaxItemCode_RHP</code>, <code>EmaxItemCode_RHP+</code>. Falls back to <code>EmaxItemCode</code>.", "PACKAGE-EMAX-C"],
-    ["ItemDescription", "header", "<code>\"{plan} Road Hazard Protection Warranty - {WarrantyRefNo}\"</code> (max 200).", "RHP Road Hazard Protection Warranty - RHP-20261105-E94325329"],
-    ["UOMCode", "config", "<code>EmaxUOMCode</code> → else <code>\"UNIT\"</code>.", "UNIT"],
+    ["ItemCode", "setting", "<code>EmaxItemCode_{plan}</code>, where plan is the warranty's <code>WarrantyPlanCode</code> (default <code>RHP</code>). Falls back to <code>EmaxItemCode</code>.", "PACKAGE-EMAX-C"],
+    ["ItemDescription", "header", "<code>{plan} Road Hazard Protection Warranty - {WarrantyRefNo}</code>, at most 200 characters.", "RHP Road Hazard Protection Warranty - RHP-20261105-E94325329"],
+    ["UOMCode", "setting", "<code>EmaxUOMCode</code>, else <code>UNIT</code>.", "UNIT"],
     ["Quantity", "fixed", "<code>1</code>", "1"],
     ["FOCQuantity", "fixed", "<code>0</code>", "0"],
     ["UnitPrice", "calc", "Amount ex-SST.", "100.00"],
@@ -381,175 +401,144 @@ const DATA = {
     ["DiscountAmount", "fixed", "<code>0</code>", "0"],
     ["TaxAmount", "calc", "SST amount.", "8.00"],
     ["TotalAmountWithTax", "calc", "Paid total.", "108.00"],
-    ["TaxCode", "fixed", "<code>\"SST\"</code>", "SST"],
+    ["TaxCode", "fixed", "<code>SST</code>", "SST"],
     ["IsGSTInclusive", "fixed", "<code>false</code>", "false"],
     ["SalesmanCode", "fixed", "<code>null</code>", "null"],
-    ["LocationCode", "config", "<code>EmaxLocationCode</code> → <code>null</code> when blank.", "null"],
-    ["Remark", "header detail", "<code>\"Plate {Header.PlateNumber} | {tyre summary}\"</code> (max 200). Tyre summary = <code>Detail.TyreDescription</code> grouped as <code>\"{count} x {description}\"</code>, joined with commas.", "Plate VJH988 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V"],
+    ["LocationCode", "setting", "<code>EmaxLocationCode</code>, or <code>null</code> when blank.", "null"],
+    ["Remark", "detail", "<code>Plate {PlateNumber} | {tyres}</code>, at most 200 characters. Tyres are the <code>TyreDescription</code> values grouped as <code>{count} x {description}</code>.", "Plate VJH988 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V"],
     ["Status", "fixed", "<code>null</code>", "null"],
-    ["CreatedBy / ModifiedBy", "fixed", "<code>\"SYSTEM\"</code>", "SYSTEM"],
+    ["CreatedBy / ModifiedBy", "fixed", "<code>SYSTEM</code>", "SYSTEM"],
     ["CreationDateTime / ModificationDateTime", "calc", "Now.", "2026-11-05T14:19:17"],
   ],
   "t-payment-header": [
-    ["DocumentNumber", "fixed", "<code>null</code> — eMAX generates the OR number.", "null"],
-    ["PaymentType", "config", "<code>EmaxPaymentType</code>", "Cheque/Bank"],
-    ["BranchCode", "config", "<code>EmaxBranchCode</code> (same as the Cash Sale).", "MICHELIN-MY"],
-    ["PaymentDate", "payment header", "<code>Payment.PaidDate</code> → else <code>Header.PaymentDate</code> → else now.", "2026-11-05T14:10:50"],
-    ["CustomerSupplierCode", "config", "<code>EmaxCustomerCode</code> (same as the Cash Sale).", "CASH SALES"],
+    ["DocumentNumber", "fixed", "<code>null</code>, so eMAX assigns the OR number.", "null"],
+    ["PaymentType", "setting", "<code>EmaxPaymentType</code>", "Cheque/Bank"],
+    ["BranchCode", "setting", "<code>EmaxBranchCode</code>, as on the Cash Sale.", "MICHELIN-MY"],
+    ["PaymentDate", "payment", "<code>PaidDate</code>, else the warranty's <code>PaymentDate</code>, else now.", "2026-11-05T14:10:50"],
+    ["CustomerSupplierCode", "setting", "<code>EmaxCustomerCode</code>, as on the Cash Sale.", "CASH SALES"],
     ["AmountInput", "calc", "Paid total.", "108.00"],
-    ["BankChargeAmountInput", "fixed", "<code>0</code> — Fiuu's fee is not deducted.", "0"],
-    ["Info1", "payment", "<code>PaymentRefNo</code> — the Fiuu transaction ID (max 50).", "30123456789"],
-    ["Info2", "config fiuu", "<code>EmaxPaymentChannel</code> (else <code>\"FIUU\"</code>), plus <code>\" ({Channel})\"</code> from the Fiuu log when one is recorded (max 50).", "FIUU (fpx_mb2u)"],
+    ["BankChargeAmountInput", "fixed", "<code>0</code>. Fiuu's fee is not deducted.", "0"],
+    ["Info1", "payment", "<code>PaymentRefNo</code>, the Fiuu transaction ID, at most 50 characters.", "30123456789"],
+    ["Info2", "fiuu", "<code>EmaxPaymentChannel</code> (else <code>FIUU</code>) followed by the Fiuu channel in brackets, at most 50 characters.", "FIUU (fpx_mb2u)"],
     ["Info3", "fixed", "<code>null</code>", "null"],
-    ["PaymentAccountCode", "config", "<code>EmaxPaymentAccountCode</code> — the bank account Fiuu settles into.", "1-1701"],
-    ["PaymentReferenceNo", "calc", "Reference (max 20 — never the Fiuu ID).", "RHP20261105E94325329"],
-    ["ItemDetails", "calc", "One line — see the Line table below.", "[ … ]"],
+    ["PaymentAccountCode", "setting", "<code>EmaxPaymentAccountCode</code>, the bank account Fiuu settles into.", "1-1701"],
+    ["PaymentReferenceNo", "calc", "Reference. Never the Fiuu ID, which is too long.", "RHP20261105E94325329"],
+    ["ItemDetails", "calc", "The one line below.", "[ 1 line ]"],
   ],
   "t-payment-line": [
     ["LineNumber", "fixed", "<code>1</code>", "1"],
-    ["ItemDocumentType", "fixed", "<code>\"CS\"</code> (Cash Sale).", "CS"],
-    ["DocumentReferenceNumber", "log", "<code>InvoiceDocNo</code> — the CS number ImportSales returned.", "CS1001"],
+    ["ItemDocumentType", "fixed", "<code>CS</code> (Cash Sale).", "CS"],
+    ["DocumentReferenceNumber", "log", "<code>InvoiceDocNo</code>, the CS number the Cash Sale returned.", "CS1001"],
     ["DocumentReferenceNumber2", "fixed", "<code>null</code>", "null"],
-    ["ItemAmountInput", "calc", "Paid total — settles the whole Cash Sale.", "108.00"],
+    ["ItemAmountInput", "calc", "Paid total, which settles the whole Cash Sale.", "108.00"],
   ],
   "t-customer": [
-    ["Keyword", "config", "<code>EmaxCustomerCode</code> (query string).", "CASH SALES"],
+    ["Keyword", "setting", "<code>EmaxCustomerCode</code>, in the query string.", "CASH SALES"],
   ],
   "t-pdf": [
-    ["DocumentNo", "log", "<code>InvoiceDocNo</code> for the warranty (JSON body).", "CS1001"],
-    ["DocumentType", "fixed", "<code>\"Cash\"</code> (JSON body).", "Cash"],
-    ["Authorization", "calc", "<code>Bearer {AppWA token}</code> — see below. Falls back to the CMP ChatBot token, then Basic auth.", "Bearer eyJ…"],
+    ["DocumentNo", "log", "<code>InvoiceDocNo</code>, in the JSON body.", "CS1001"],
+    ["DocumentType", "fixed", "<code>Cash</code>, in the JSON body.", "Cash"],
+    ["Authorization", "calc", "<code>Bearer</code> with the token below. Falls back to the CMP ChatBot token, then Basic auth.", "Bearer eyJ…"],
   ],
   "t-token": [
-    ["Username", "config", "<code>EmaxWebAPIUsername</code>", "system"],
-    ["Password", "config", "<code>EmaxWebAPIPassword</code>", "••••••"],
-    ["UserContactNo", "config", "<code>EmaxAppWAUserContactNo</code>, normalised to <code>60…</code> digits.", "60123231088"],
-    ["ApiUrl", "config", "<code>EmaxWebAPIUrl</code>, trailing slash removed.", "https://…/MICHELIN.webapi"],
-    ["Signing / encryption keys", "config", "<code>EmaxAppWASigningKey</code> / <code>EmaxAppWAEncryptionKey</code> — must match the target eMAX deployment.", "(secret)"],
+    ["Username", "setting", "<code>EmaxWebAPIUsername</code>", "system"],
+    ["Password", "setting", "<code>EmaxWebAPIPassword</code>", "••••••"],
+    ["UserContactNo", "setting", "<code>EmaxAppWAUserContactNo</code> as digits starting with 60.", "60123231088"],
+    ["ApiUrl", "setting", "<code>EmaxWebAPIUrl</code> without the trailing slash.", "https://…/MICHELIN.webapi"],
+    ["Keys", "setting", "<code>EmaxAppWASigningKey</code> and <code>EmaxAppWAEncryptionKey</code>. Both must match the eMAX deployment.", "(secret)"],
   ],
   "t-log": [
-    ["InvoiceDocNo", "calc", "ImportSales reply <code>InvoiceNumber</code> (or <code>DocumentNo</code>), saved only when <code>IsImported = true</code>.", "CS1001"],
-    ["PaymentDocNo", "calc", "ImportPayment reply <code>DocumentNo</code> (or <code>PaymentNumber</code>), when <code>IsSuccess</code> / <code>IsImported = true</code>.", "OR1001"],
-    ["SalesRequestJson / SalesResponseJson", "calc", "The exact Cash Sale request and eMAX's raw reply.", "[{…}]"],
-    ["PaymentRequestJson / PaymentResponseJson", "calc", "The exact payment request and eMAX's raw reply.", "[{…}]"],
-    ["LastError", "calc", "eMAX's <code>ErrorMessages</code> / <code>Message</code>, or our own text when eMAX gives none.", "eMAX did not import the sale."],
-    ["Status", "calc", "<code>Pending</code> → <code>InvoicePosted</code> (Cash Sale done) → <code>Completed</code> (payment done), or <code>Failed</code>.", "Completed"],
-    ["AttemptCount", "calc", "+1 each time a post starts.", "1"],
-    ["LockedUntil", "calc", "Now + 5 minutes while a post runs, cleared when it ends — stops two posts of the same warranty at once.", "NULL"],
+    ["InvoiceDocNo", "reply", "<code>InvoiceNumber</code> (or <code>DocumentNo</code>) from the Cash Sale reply, saved only when <code>IsImported</code> is true.", "CS1001"],
+    ["PaymentDocNo", "reply", "<code>DocumentNo</code> (or <code>PaymentNumber</code>) from the receipt reply, when it succeeds.", "OR1001"],
+    ["SalesRequestJson / SalesResponseJson", "reply", "The exact Cash Sale request and eMAX's raw reply.", "[{…}]"],
+    ["PaymentRequestJson / PaymentResponseJson", "reply", "The exact receipt request and eMAX's raw reply.", "[{…}]"],
+    ["LastError", "reply", "eMAX's error message, or our own text when eMAX gives none.", "eMAX did not import the sale."],
+    ["Status", "calc", "<code>Pending</code>, then <code>InvoicePosted</code> once the Cash Sale is in, then <code>Completed</code>. <code>Failed</code> when the Cash Sale fails.", "Completed"],
+    ["AttemptCount", "calc", "Goes up by one each time a post starts.", "1"],
+    ["LockedUntil", "calc", "Now + 5 minutes while a post runs, cleared when it ends. Stops two posts of the same warranty at once.", "NULL"],
   ],
 };
 
 const esc = (s) => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-// Render legend
-document.getElementById("legendTable").innerHTML =
-  TAGS.map(([k, , m]) => `<tr><td>${chip(k)}</td><td>${m}</td></tr>`).join("");
-document.getElementById("legendFilters").innerHTML =
-  `<button data-tag="" aria-pressed="true">All sources</button>` +
-  TAGS.map(([k]) => `<button data-tag="${k}" aria-pressed="false">${chip(k)}</button>`).join("");
+document.getElementById("key").innerHTML =
+  Object.values(KINDS).map(([label, text]) => `<dt>${label}</dt><dd>${text}</dd>`).join("");
 
-// Render tables
 for (const [id, rows] of Object.entries(DATA)) {
-  document.getElementById(id).innerHTML = rows.map(([f, tags, src, ex]) =>
-    `<tr data-tags="${tags}"><td class="field">${esc(f)}</td>` +
-    `<td class="src">${tags.split(" ").map(chip).join("")}<span class="s">${src}</span></td>` +
-    `<td class="ex">${esc(ex)}</td></tr>`).join("");
+  document.getElementById(id).innerHTML = rows.map(([f, kind, src, ex]) =>
+    `<tr${kind === "fixed" ? ' class="fixed"' : ""}>` +
+    `<td class="f">${esc(f)}</td>` +
+    `<td class="s"><span class="k">${KINDS[kind][0]}</span>${src}</td>` +
+    `<td class="e">${esc(ex)}</td></tr>`).join("");
 }
 
-// Search + tag filter
+// Find
 const q = document.getElementById("q");
-let activeTag = "";
-const originals = new Map();
-document.querySelectorAll("tbody tr").forEach(tr => originals.set(tr, tr.innerHTML));
+const rows = [...document.querySelectorAll("main tbody tr")].filter(r => r.closest("table").parentElement.className === "scroll");
+const original = new Map(rows.map(r => [r, r.innerHTML]));
 
-function highlight(html, term) {
-  if (!term) return html;
+function mark(html, term) {
   const re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
-  // Only replace text outside tags
-  return html.replace(/(>[^<]*)/g, m => m.replace(re, "<mark>$1</mark>"));
+  return html.replace(/>([^<]+)</g, (m, text) => ">" + text.replace(re, "<mark>$1</mark>") + "<");
 }
 
 function apply() {
   const term = q.value.trim();
   const lower = term.toLowerCase();
   let shown = 0;
-  document.querySelectorAll("table[data-searchable] tbody tr").forEach(tr => {
-    const html = originals.get(tr);
-    const text = tr.textContent.toLowerCase();
-    const tagOk = !activeTag || tr.dataset.tags.split(" ").includes(activeTag);
-    const termOk = !lower || text.includes(lower);
-    const visible = tagOk && termOk;
-    tr.classList.toggle("hidden", !visible);
-    tr.innerHTML = visible ? highlight(html, term) : html;
-    if (visible) shown++;
-  });
-  // Hide sections whose tables are all empty while filtering
-  const filtering = !!(lower || activeTag);
+  for (const r of rows) {
+    r.innerHTML = original.get(r);
+    const hit = !lower || r.textContent.toLowerCase().includes(lower);
+    r.hidden = !hit;
+    if (hit) { shown++; if (term) r.innerHTML = mark(r.innerHTML, term); }
+  }
+  // While searching, drop the intro and any section with no hits.
+  document.getElementById("top").hidden = !!lower;
+  document.getElementById("sources").hidden = !!lower;
   document.querySelectorAll("main section").forEach(sec => {
-    if (sec.id === "legend") return;
-    const rows = sec.querySelectorAll("table[data-searchable] tbody tr");
-    if (!rows.length) return;
-    const any = [...rows].some(r => !r.classList.contains("hidden"));
-    sec.style.display = filtering && !any ? "none" : "";
-    sec.querySelectorAll(".tablewrap").forEach(w => {
-      const r = w.querySelectorAll("tbody tr");
-      const vis = [...r].some(x => !x.classList.contains("hidden"));
-      w.style.display = filtering && !vis ? "none" : "";
-    });
+    if (sec.id === "sources") return;
+    const own = [...sec.querySelectorAll(".scroll tbody tr")];
+    sec.hidden = !!lower && own.every(r => r.hidden);
   });
-  document.querySelector(".hero").style.display = filtering ? "none" : "";
-  document.getElementById("noResults").style.display = filtering && shown === 0 ? "block" : "none";
-  updateCounts();
+  document.querySelectorAll(".doc, .caption").forEach(el => el.hidden = !!lower);
+  document.getElementById("empty").hidden = !(lower && shown === 0);
+  counts();
 }
 
-function updateCounts() {
+function counts() {
+  const hideFixed = document.body.classList.contains("hide-fixed");
   document.querySelectorAll("[data-count]").forEach(el => {
-    const rows = document.querySelectorAll("#" + el.dataset.count + " tr");
-    const vis = [...rows].filter(r => !r.classList.contains("hidden")).length;
-    el.textContent = vis === rows.length ? `${rows.length} fields` : `${vis} of ${rows.length} fields`;
+    const all = [...document.querySelectorAll("#" + el.dataset.count + " tr")];
+    const vis = all.filter(r => !r.hidden && !(hideFixed && r.classList.contains("fixed"))).length;
+    el.textContent = vis === all.length ? `${all.length} fields` : `${vis} of ${all.length} fields`;
   });
 }
 
 q.addEventListener("input", apply);
-document.getElementById("legendFilters").addEventListener("click", e => {
-  const b = e.target.closest("button"); if (!b) return;
-  activeTag = b.dataset.tag;
-  document.querySelectorAll("#legendFilters button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
-  apply();
-  if (activeTag) document.getElementById("values").scrollIntoView();
-});
 document.addEventListener("keydown", e => {
   if (e.key === "/" && document.activeElement !== q) { e.preventDefault(); q.focus(); }
   if (e.key === "Escape" && document.activeElement === q) { q.value = ""; apply(); q.blur(); }
 });
 
-// Theme toggle (remembered per browser)
-const root = document.documentElement;
-try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
-document.getElementById("themeBtn").addEventListener("click", () => {
-  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-  root.dataset.theme = dark ? "light" : "dark";
-  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
-});
+// Hide fixed values (remembered per browser)
+const hideFixed = document.getElementById("hideFixed");
+try { hideFixed.checked = localStorage.getItem("hideFixed") === "1"; } catch {}
+const setFixed = () => {
+  document.body.classList.toggle("hide-fixed", hideFixed.checked);
+  try { localStorage.setItem("hideFixed", hideFixed.checked ? "1" : "0"); } catch {}
+  counts();
+};
+hideFixed.addEventListener("change", setFixed);
+setFixed();
 
-// Mobile menu
-const side = document.getElementById("side");
-document.getElementById("menuBtn").addEventListener("click", () => side.classList.toggle("open"));
-side.addEventListener("click", e => { if (e.target.tagName === "A") side.classList.remove("open"); });
-
-// Active section in the sidebar
-const links = [...side.querySelectorAll("a")];
-const targets = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+// Contents: mark the section in view
+const links = [...document.querySelectorAll(".toc a")];
 const obs = new IntersectionObserver(entries => {
   entries.forEach(en => {
-    if (en.isIntersecting) {
-      links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
-    }
+    if (en.isIntersecting) links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id));
   });
-}, { rootMargin: "-70px 0px -70% 0px" });
-targets.forEach(t => obs.observe(t));
-
-updateCounts();
+}, { rootMargin: "-80px 0px -70% 0px" });
+links.forEach(a => { const t = document.querySelector(a.getAttribute("href")); if (t) obs.observe(t); });
 </script>
 </body>
 </html>
