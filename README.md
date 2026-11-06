@@ -8,12 +8,16 @@ Static documentation site: where every field the TPP RHP microsite sends to eMAX
 
 ## Remarks
 
-Every table has a Remarks column. Saved remarks live in `remarks.json` (keys are `"<tableId>|<field>"`, e.g. `"t-sales-header|InvoiceDate"`), so they are shared and versioned in git. No database.
+Every table has a Remarks column, stored in a Google Sheet through a Google Apps Script web app ([apps-script/Code.gs](apps-script/Code.gs)). Typing in a cell saves it about a second after you stop. Everyone sees it on their next page load.
 
-1. Type in a Remarks cell. The edit is kept in your browser only and shows as "Not saved".
-2. Click **Remarks → Copy remarks.json**. This copies every remark, saved ones plus your edits.
-3. Replace the contents of `remarks.json` on GitHub with it and commit. Vercel redeploys and everyone sees it.
+**Setup (once):**
+1. Create a Google Sheet, open **Extensions → Apps Script**, and paste in `apps-script/Code.gs`.
+2. **Project Settings → Script properties**: add `EDIT_KEY` with a password of your choice.
+3. **Deploy → New deployment → Web app**: Execute as **Me**, Who has access **Anyone**. Authorise it and copy the URL that ends in `/exec`.
+4. Put that URL in `const SHEET_URL = "..."` in `index.html`, then commit and push.
 
-Remarks don't load when you open `index.html` by double-click, because browsers block reading a local file. Use the Vercel URL, or run `python -m http.server` in this folder.
+**Editing:** click **Remarks** in the top bar and enter your name and the edit key once per browser. Cells marked "Not saved" are retried when you click **Save and retry unsaved**.
+
+The sheet's rows are `Key | Remark | UpdatedBy | UpdatedAt`, where Key is `"<tableId>|<field>"` (e.g. `t-sales-header|InvoiceDate`). If you change the script later, use **Deploy → Manage deployments → Edit → New version** so the URL stays the same.
 
 Source of truth is the microsite code (`EmaxPostingService.BuildSales` / `BuildPayment`, `EmaxClient`, `AppWAToken`). When the mapping changes there, update the `DATA` tables in `index.html`.

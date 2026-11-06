@@ -97,7 +97,7 @@ main {
   padding-block: 28px 64px;
   padding-left: max(16px, min(40px, 4vw)); padding-right: max(16px, min(40px, 4vw), env(safe-area-inset-right, 0px));
 }
-.wrap { max-width: 1480px; width: 100%; display: grid; gap: 24px; }
+.wrap { width: 100%; display: grid; gap: 24px; }
 
 /* Page heading */
 .title { display: grid; gap: 6px; }
@@ -166,7 +166,9 @@ td.r textarea::placeholder { color: var(--tp-gray-500); }
 tbody tr:hover td.r textarea { border-color: var(--tp-gray-300); background: #fff; }
 td.r textarea:focus { border-style: solid; border-color: var(--tp-green); background: #fff; box-shadow: 0 0 0 3px var(--tp-green-glow); outline: none; }
 td.r.dirty textarea { border-style: solid; border-color: var(--tp-yellow-dark); background: var(--tint-yellow); }
-td.r.dirty::after { content: "Not saved"; position: absolute; right: 18px; bottom: 3px; font-size: 10px; font-weight: 600; color: var(--text-yellow); pointer-events: none; }
+td.r[data-state]::after { content: attr(data-state); position: absolute; right: 18px; bottom: 3px; font-size: 10px; font-weight: 600; color: var(--text-yellow); pointer-events: none; }
+td.r[data-state="Saved"]::after { color: var(--tp-green-dark); }
+td.r .by { display: block; margin: 3px 8px 0; font-size: 11px; color: var(--tp-gray-500); }
 th.rh { color: var(--tp-green-dark); }
 
 /* Remarks bar */
@@ -181,7 +183,14 @@ th.rh { color: var(--tp-green-dark); }
 .rpanel .pri { color: #fff; border: 0; background: linear-gradient(135deg, var(--tp-green) 0%, var(--tp-green-light) 100%); }
 .rpanel .sec { color: var(--tp-text-secondary); background: #fff; border: 1.5px solid var(--tp-gray-300); }
 .rpanel .st { font-size: 12.5px; color: var(--tp-green-dark); min-height: 1em; }
-.rpanel textarea { width: 100%; height: 110px; font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--tp-gray-300); border-radius: 6px; padding: 8px; }
+.rpanel .st.err { color: #c62828; }
+.rpanel label { display: grid; gap: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; color: var(--tp-text-secondary); }
+.rpanel input { height: 38px; padding: 0 10px; font: inherit; font-size: 14px; text-transform: none; letter-spacing: 0; color: var(--tp-text); border: 1.5px solid var(--tp-gray-300); border-radius: var(--tp-radius-sm); }
+.rpanel input:focus { border-color: var(--tp-green); box-shadow: 0 0 0 3px var(--tp-green-glow); outline: none; }
+.rpanel .conn { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--tp-text-secondary); }
+.rpanel .conn::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--tp-gray-500); }
+.rpanel .conn.ok::before { background: var(--tp-green); }
+.rpanel .conn.bad::before { background: #c62828; }
 tr.fixed td.f { font-weight: 400; color: var(--tp-text-secondary); }
 tr.fixed td.s .d, tr.fixed td.e { color: var(--tp-gray-500); }
 body.hide-fixed tr.fixed { display: none; }
@@ -237,21 +246,19 @@ footer { font-size: 12.5px; color: var(--tp-text-secondary); padding-top: 8px; }
 </header>
 
 <div class="rpanel" id="rpanel" hidden role="dialog" aria-label="Save remarks">
-  <h3>Save remarks</h3>
-  <div id="rsummary">No unsaved remarks. Click any Remarks cell to write one.</div>
-  <ol>
-    <li>Write remarks in the Remarks column. They are kept in this browser until saved.</li>
-    <li>Click <b>Copy remarks.json</b>.</li>
-    <li>On GitHub, open <code>remarks.json</code> in the TPP-Documention repo, replace its contents with the copied text and commit.</li>
-    <li>Vercel redeploys and everyone sees the remarks.</li>
-  </ol>
-  <div class="row">
-    <button class="pri" id="rcopy" type="button">Copy remarks.json</button>
-    <button class="sec" id="rdiscard" type="button">Discard my edits</button>
-    <button class="sec" id="rclose" type="button">Close</button>
-  </div>
+  <h3>Remarks</h3>
+  <div class="conn" id="rconn">Connecting to the Google Sheet…</div>
+  <div id="rsummary"></div>
+  <form id="rform" class="row" style="display:grid;gap:10px">
+    <label>Your name<input id="rname" autocomplete="name" maxlength="100" placeholder="Shown next to your remarks"></label>
+    <label>Edit key<input id="rkey" type="password" autocomplete="off" placeholder="Needed to save"></label>
+    <div class="row">
+      <button class="pri" type="submit">Save and retry unsaved</button>
+      <button class="sec" id="rreload" type="button">Reload remarks</button>
+      <button class="sec" id="rclose" type="button">Close</button>
+    </div>
+  </form>
   <div class="st" id="rstatus" aria-live="polite"></div>
-  <textarea id="rout" hidden readonly aria-label="remarks.json contents"></textarea>
 </div>
 
 <div class="shell">
@@ -542,80 +549,123 @@ for (const [id, rows] of Object.entries(DATA)) {
       `<td class="f">${esc(f)}</td>` +
       `<td class="s"><span class="badge ${group}">${label}</span><span class="d">${src}</span></td>` +
       `<td class="e">${esc(ex)}</td>` +
-      `<td class="r"><textarea rows="1" data-key="${esc(id + "|" + f)}" placeholder="Add a remark" aria-label="Remark for ${esc(f)}"></textarea></td></tr>`;
+      `<td class="r"><textarea rows="1" data-key="${esc(id + "|" + f)}" placeholder="Add a remark" aria-label="Remark for ${esc(f)}"></textarea><span class="by" hidden></span></td></tr>`;
   }).join("");
 }
 
-// Remarks: saved = remarks.json in the repo (shared, committed); drafts = this browser only.
-const DRAFT_KEY = "remarkDrafts";
-let saved = {};
-let drafts = {};
-try { drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}") || {}; } catch { drafts = {}; }
-const areas = [...document.querySelectorAll("td.r textarea")];
-const grow = (ta) => { ta.style.height = "auto"; ta.style.height = ta.scrollHeight + 2 + "px"; };
-const current = (k) => (k in drafts ? drafts[k] : (saved[k] || ""));
+// Remarks are stored in a Google Sheet through its Apps Script web app (see apps-script/Code.gs).
+// Paste the web app URL (ends in /exec) here. Saving also needs the edit key set in the script.
+const SHEET_URL = "https://script.google.com/macros/s/AKfycby9GnlDXjt9NlYVk9Q-0UYbR1uXuDVYuYQ_Bhs06ph_MkSbabKt7aQ5NFH3AA9BYad8yQ/exec";
 
-function storeDrafts() { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts)); } catch {} }
-function paintRemarks() {
-  for (const ta of areas) {
-    const k = ta.dataset.key;
-    if (document.activeElement !== ta) ta.value = current(k);
-    ta.parentElement.classList.toggle("dirty", k in drafts);
-    grow(ta);
-  }
-  const n = Object.keys(drafts).length;
-  const c = document.getElementById("rcount");
+const LS = { drafts: "remarkDrafts", name: "remarkName", key: "remarkEditKey" };
+const lsGet = (k, d) => { try { return localStorage.getItem(k) ?? d; } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
+let saved = {};                       // key -> { text, by, at } from the sheet
+let drafts = {};                      // key -> text typed here but not saved yet
+try { drafts = JSON.parse(lsGet(LS.drafts, "{}")) || {}; } catch { drafts = {}; }
+let editor = { name: lsGet(LS.name, ""), key: lsGet(LS.key, "") };
+const areas = [...document.querySelectorAll("td.r textarea")];
+const areaByKey = new Map(areas.map(ta => [ta.dataset.key, ta]));
+const timers = {};
+const rstatus = document.getElementById("rstatus"), rconn = document.getElementById("rconn");
+
+const grow = (ta) => { ta.style.height = "auto"; ta.style.height = ta.scrollHeight + 2 + "px"; };
+const savedText = (k) => (saved[k] ? saved[k].text : "");
+const current = (k) => (k in drafts ? drafts[k] : savedText(k));
+const fmtDate = (iso) => { const d = new Date(iso); if (isNaN(d)) return ""; const p = (n) => String(n).padStart(2, "0"); return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()}`; };
+function say(msg, err) { rstatus.textContent = msg; rstatus.classList.toggle("err", !!err); }
+function storeDrafts() { lsSet(LS.drafts, JSON.stringify(drafts)); }
+
+function paintCell(ta, state) {
+  const k = ta.dataset.key, td = ta.parentElement, by = td.querySelector(".by");
+  if (document.activeElement !== ta) { ta.value = current(k); grow(ta); }
+  if (state !== undefined) { if (state) td.dataset.state = state; else delete td.dataset.state; }
+  else if (k in drafts) td.dataset.state = td.dataset.state === "Saving…" ? "Saving…" : "Not saved";
+  else if (td.dataset.state !== "Saved") delete td.dataset.state;
+  const s = saved[k];
+  by.hidden = !(s && !(k in drafts) && (s.by || s.at));
+  if (!by.hidden) by.textContent = [s.by, fmtDate(s.at)].filter(Boolean).join(" · ");
+}
+function paintCount() {
+  const n = Object.keys(drafts).length, c = document.getElementById("rcount");
   c.hidden = n === 0; c.textContent = n;
   document.getElementById("rsummary").textContent = n === 0
-    ? "No unsaved remarks. Click any Remarks cell to write one."
-    : `${n} remark${n === 1 ? "" : "s"} not saved yet. Copy them into remarks.json to share.`;
+    ? "All remarks are saved. Click any Remarks cell to write one."
+    : `${n} remark${n === 1 ? "" : "s"} not saved yet${editor.key ? "." : ". Enter the edit key below to save."}`;
 }
+function paintAll() { areas.forEach(ta => paintCell(ta)); paintCount(); }
+
+async function save(k) {
+  const ta = areaByKey.get(k);
+  if (!(k in drafts) || !ta) return;
+  if (!SHEET_URL) { say("Remarks storage is not set up yet (no Google Sheet URL).", true); return; }
+  if (!editor.key) { paintCount(); return; }
+  const text = drafts[k];
+  paintCell(ta, "Saving…");
+  try {
+    // text/plain body = no CORS preflight, which Apps Script cannot answer.
+    const res = await fetch(SHEET_URL, { method: "POST", body: JSON.stringify({ key: k, text, by: editor.name, editKey: editor.key }) });
+    const j = await res.json();
+    if (!j.ok) throw new Error(j.error || "Save failed");
+    if (text) saved[k] = { text, by: editor.name, at: new Date().toISOString() }; else delete saved[k];
+    if (drafts[k] === text) { delete drafts[k]; storeDrafts(); }
+    paintCell(ta, k in drafts ? "Not saved" : "Saved");
+    setTimeout(() => { if (ta.parentElement.dataset.state === "Saved") paintCell(ta, null); }, 2000);
+  } catch (e) {
+    paintCell(ta, "Not saved");
+    say(e.message === "Wrong edit key" ? "The edit key is wrong. Check it under Remarks." : "Could not save: " + e.message, true);
+  }
+  paintCount();
+}
+function saveAll() { Object.keys(drafts).forEach(save); }
+
 for (const ta of areas) {
   ta.addEventListener("input", () => {
     const k = ta.dataset.key, v = ta.value.trim();
-    if (v === (saved[k] || "")) delete drafts[k]; else drafts[k] = v;
-    storeDrafts();
-    ta.parentElement.classList.toggle("dirty", k in drafts);
-    grow(ta);
-    paintRemarks();
+    if (v === savedText(k)) delete drafts[k]; else drafts[k] = v;
+    storeDrafts(); grow(ta); paintCell(ta); paintCount();
+    clearTimeout(timers[k]);
+    timers[k] = setTimeout(() => save(k), 1200);
   });
+  ta.addEventListener("blur", () => { clearTimeout(timers[ta.dataset.key]); save(ta.dataset.key); });
 }
-function mergedJson() {
-  const out = {};
-  for (const ta of areas) { const v = current(ta.dataset.key); if (v) out[ta.dataset.key] = v; }
-  return JSON.stringify(out, null, 2) + "\n";
+
+async function load() {
+  if (!SHEET_URL) { rconn.className = "conn bad"; rconn.textContent = "Not connected: the Google Sheet URL is not set yet."; paintAll(); return; }
+  rconn.className = "conn"; rconn.textContent = "Loading remarks…";
+  try {
+    const res = await fetch(SHEET_URL, { cache: "no-store" });
+    const j = await res.json();
+    if (!j.ok) throw new Error(j.error || "Load failed");
+    saved = j.remarks || {};
+    for (const k of Object.keys(drafts)) if (drafts[k] === savedText(k)) delete drafts[k];
+    storeDrafts();
+    rconn.className = "conn ok"; rconn.textContent = `Connected to the Google Sheet · ${Object.keys(saved).length} remark${Object.keys(saved).length === 1 ? "" : "s"}`;
+    paintAll(); saveAll();
+  } catch (e) {
+    rconn.className = "conn bad"; rconn.textContent = "Could not load remarks from the Google Sheet.";
+    paintAll();
+  }
 }
 
 const rpanel = document.getElementById("rpanel"), rbtn = document.getElementById("rbtn");
-const rstatus = document.getElementById("rstatus"), rout = document.getElementById("rout");
-function togglePanel(open) { rpanel.hidden = !open; rbtn.setAttribute("aria-expanded", String(open)); rstatus.textContent = ""; rout.hidden = true; }
+const rname = document.getElementById("rname"), rkey = document.getElementById("rkey");
+rname.value = editor.name; rkey.value = editor.key;
+function togglePanel(open) { rpanel.hidden = !open; rbtn.setAttribute("aria-expanded", String(open)); if (open) (editor.key ? rname : rkey).focus(); }
 rbtn.addEventListener("click", () => togglePanel(rpanel.hidden));
 document.getElementById("rclose").addEventListener("click", () => togglePanel(false));
-document.getElementById("rcopy").addEventListener("click", () => {
-  const json = mergedJson();
-  const fallback = () => { rout.value = json; rout.hidden = false; rout.focus(); rout.select(); rstatus.textContent = "Copy was blocked. Select the text below and copy it."; };
-  try {
-    navigator.clipboard.writeText(json).then(
-      () => { rstatus.textContent = "Copied. Paste it into remarks.json on GitHub and commit."; },
-      fallback);
-  } catch { fallback(); }
+document.getElementById("rreload").addEventListener("click", () => { say(""); load(); });
+document.getElementById("rform").addEventListener("submit", (e) => {
+  e.preventDefault();
+  editor = { name: rname.value.trim(), key: rkey.value.trim() };
+  lsSet(LS.name, editor.name); lsSet(LS.key, editor.key);
+  say(editor.key ? "Saved. Unsaved remarks are being sent now." : "Enter the edit key to save remarks.", !editor.key);
+  saveAll(); paintCount();
 });
-let discardArmed = false;
-document.getElementById("rdiscard").addEventListener("click", (e) => {
-  if (!discardArmed) { discardArmed = true; e.target.textContent = "Click again to discard"; setTimeout(() => { discardArmed = false; e.target.textContent = "Discard my edits"; }, 3000); return; }
-  discardArmed = false; e.target.textContent = "Discard my edits";
-  drafts = {}; storeDrafts(); paintRemarks(); rstatus.textContent = "Your unsaved edits were discarded.";
-});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !rpanel.hidden) togglePanel(false); });
 
-fetch("remarks.json", { cache: "no-store" })
-  .then(r => r.ok ? r.json() : {})
-  .catch(() => ({}))
-  .then(j => {
-    saved = (j && typeof j === "object") ? j : {};
-    for (const k of Object.keys(drafts)) if (drafts[k] === (saved[k] || "")) delete drafts[k];
-    storeDrafts(); paintRemarks();
-  });
-paintRemarks();
+paintAll();
+load();
 
 // Find (remark cells are left alone so typing is never lost; their text still counts as a match)
 const q = document.getElementById("q");
