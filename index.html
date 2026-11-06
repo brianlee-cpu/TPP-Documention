@@ -469,7 +469,7 @@ const DATA = {
   ],
   "t-sales-line": [
     ["LineNumber", "fixed", "<code>1</code>", "1"],
-    ["ItemCode", "setting", "<code>EmaxItemCode_{plan}</code>, where plan is the warranty's <code>WarrantyPlanCode</code> (default <code>RHP</code>). Falls back to <code>EmaxItemCode</code>.", "PACKAGE-EMAX-C"],
+    ["ItemCode", "setting", "<code>EmaxItemCode_{plan}</code>, where plan is the warranty's <code>WarrantyPlanCode</code> (default <code>RHP</code>). Falls back to <code>EmaxItemCode</code>.", "RHPWARRANTY"],
     ["ItemDescription", "header", "<code>{plan} Road Hazard Protection Warranty - {WarrantyRefNo}</code>, at most 200 characters.", "RHP Road Hazard Protection Warranty - RHP-20261105-E94325329"],
     ["UOMCode", "setting", "<code>EmaxUOMCode</code>, else <code>UNIT</code>.", "UNIT"],
     ["Quantity", "fixed", "<code>1</code>", "1"],
@@ -500,7 +500,7 @@ const DATA = {
     ["Info1", "payment", "<code>PaymentRefNo</code>, the Fiuu transaction ID, at most 50 characters.", "30123456789"],
     ["Info2", "fiuu", "<code>EmaxPaymentChannel</code> (else <code>FIUU</code>) followed by the Fiuu channel in brackets, at most 50 characters.", "FIUU (fpx_mb2u)"],
     ["Info3", "fixed", "<code>null</code>", "null"],
-    ["PaymentAccountCode", "setting", "<code>EmaxPaymentAccountCode</code>, the bank account Fiuu settles into.", "1-1701"],
+    ["PaymentAccountCode", "setting", "<code>EmaxPaymentAccountCode</code>, the bank account Fiuu settles into.", "2502"],
     ["PaymentReferenceNo", "calc", "Reference. Never the Fiuu ID, which is too long.", "RHP20261105E94325329"],
     ["ItemDetails", "calc", "The one line below.", "[ 1 line ]"],
   ],
@@ -520,10 +520,10 @@ const DATA = {
     ["Authorization", "calc", "<code>Bearer</code> with the token below. Falls back to the CMP ChatBot token, then Basic auth.", "Bearer eyJ…"],
   ],
   "t-token": [
-    ["Username", "setting", "<code>EmaxWebAPIUsername</code>", "system"],
+    ["Username", "setting", "<code>EmaxWebAPIUsername</code>", "admin"],
     ["Password", "setting", "<code>EmaxWebAPIPassword</code>", "••••••"],
-    ["UserContactNo", "setting", "<code>EmaxAppWAUserContactNo</code> as digits starting with 60.", "60123231088"],
-    ["ApiUrl", "setting", "<code>EmaxWebAPIUrl</code> without the trailing slash.", "https://…/MICHELIN.webapi"],
+    ["UserContactNo", "setting", "<code>EmaxAppWAUserContactNo</code> as digits starting with 60.", "60167682236"],
+    ["ApiUrl", "setting", "<code>EmaxWebAPIUrl</code> without the trailing slash.", "https://webmaxtech.com.my/TYREPLUS/MICHELIN.webapi"],
     ["Keys", "setting", "<code>EmaxAppWASigningKey</code> and <code>EmaxAppWAEncryptionKey</code>. Both must match the eMAX deployment.", "(secret)"],
   ],
   "t-log": [
