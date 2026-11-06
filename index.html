@@ -333,26 +333,62 @@ footer { font-size: 12.5px; color: var(--tp-text-secondary); padding-top: 8px; }
               <tbody>
                 <tr>
                   <td>1</td>
-                  <td>RHP Road Hazard Protection Warranty - RHP-20261105-E94325329<span class="rem">Plate VJH988 | Covered 05/11/2026 - 05/05/2027 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V</span><span class="fld">ItemDescription + Remark</span></td>
+                  <td>6 months RHP program<span class="rem">MICHELIN 225/55R19 PRIMACY 5 99V<br>225/55R19<br>1W8JN039X0326</span><span class="fld">ItemDescription + Remark</span></td>
                   <td class="num">1.0<br><span class="fld">Quantity</span></td>
                   <td>UNIT<br><span class="fld">UOMCode</span></td>
-                  <td class="num">100.00<br><span class="fld">UnitPrice</span></td>
+                  <td class="num">25.00<br><span class="fld">UnitPrice</span></td>
                   <td class="num">0.00<br><span class="fld">DiscountAmount</span></td>
-                  <td class="num">8.00<br><span class="fld">TaxAmount</span></td>
-                  <td class="num">108.00<br><span class="fld">TotalAmountWithTax</span></td>
+                  <td class="num">2.00<br><span class="fld">TaxAmount</span></td>
+                  <td class="num">27.00<br><span class="fld">TotalAmountWithTax</span></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>6 months RHP program<span class="rem">MICHELIN 225/55R19 PRIMACY 5 99V<br>225/55R19<br>1W8JN039X0326</span></td>
+                  <td class="num">1.0</td>
+                  <td>UNIT</td>
+                  <td class="num">25.00</td>
+                  <td class="num">0.00</td>
+                  <td class="num">2.00</td>
+                  <td class="num">27.00</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>6 months RHP program<span class="rem">MICHELIN 225/55R19 PRIMACY 5 99V<br>225/55R19<br>1W8JN039X0326</span></td>
+                  <td class="num">1.0</td>
+                  <td>UNIT</td>
+                  <td class="num">25.00</td>
+                  <td class="num">0.00</td>
+                  <td class="num">2.00</td>
+                  <td class="num">27.00</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>6 months RHP program<span class="rem">MICHELIN 225/55R19 PRIMACY 5 99V<br>225/55R19<br>1W8JN039X0326</span></td>
+                  <td class="num">1.0</td>
+                  <td>UNIT</td>
+                  <td class="num">25.00</td>
+                  <td class="num">0.00</td>
+                  <td class="num">2.00</td>
+                  <td class="num">27.00</td>
                 </tr>
                 <tr class="tot"><td></td><td>Total</td><td></td><td></td><td></td><td></td><td class="num">8.00</td><td class="num">108.00</td></tr>
               </tbody>
             </table>
           </div>
-          <p class="cap">How the single warranty line prints on the eMAX Cash Sale, with the field that fills each column.</p>
+          <p class="cap">How the tyre lines print on the eMAX Cash Sale (one per tyre), with the field that fills each column.</p>
 
           <h3 class="sub-h" id="sales-header">Header <span class="cnt" data-count="t-sales-header"></span></h3>
           <div class="tbl"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-sales-header"></tbody></table></div>
+          <div class="alert warn"><span class="i">!</span><div><b>Open questions for eMAX</b> (checked on CS1007 and CS1008, 06/11/2026):
+            <ul>
+              <li><b>Vehicle</b> prints <code>ProjectNo</code>, but eMAX only accepts an existing Project code. Free text such as <code>TEH1234 MAZDA CX-8</code> fails with <code>ProjectName Not Found</code>, so we send <code>null</code>. Which field takes the vehicle as free text?</li>
+              <li><b>Outlet Details</b> at the top stays empty. The outlet block in <code>InvoiceRemark</code> prints at the bottom instead, after eMAX's own PAID / BALANCE text. Which field fills Outlet Details? Maybe <code>DeliveryRemark</code>; not tested.</li>
+              <li><b>Address</b> stays empty because <code>Address1</code> to <code>Address3</code> are <code>null</code>. Should the consumer's address go there?</li>
+            </ul></div></div>
 
-          <h3 class="sub-h" id="sales-line">Line · ItemDetails[0] <span class="cnt" data-count="t-sales-line"></span></h3>
+          <h3 class="sub-h" id="sales-line">Lines · ItemDetails[] <span class="cnt" data-count="t-sales-line"></span></h3>
           <div class="tbl"><table><thead><tr><th>eMAX field</th><th>Source</th><th>Example</th></tr></thead><tbody id="t-sales-line"></tbody></table></div>
-          <div class="alert warn"><span class="i">!</span><div>The whole warranty is one line, priced from what the customer paid. The tyre prices in <code>RHP_Warranty_Reg_Detail.Price</code> are not used. When 3 tyres are billed as 4 × the unit price, the billed amount is what appears here.</div></div>
+          <div class="alert warn"><span class="i">!</span><div>One line per tyre. What the customer paid is split across the lines in proportion to each tyre's <code>RHP_Warranty_Reg_Detail.Price</code>, with any rounding cent on the last line, so the lines always add up to the amount paid. When 3 tyres are billed as 4 × the unit price, each of the 3 lines carries a third of that total.</div></div>
         </div>
       </section>
 
@@ -424,7 +460,7 @@ const DATA = {
     ["SST %", "header", "<code>SST</code>", "8"],
     ["Amount ex-SST", "calc", "Paid total ÷ (1 + SST % ÷ 100), rounded to 2 decimals.", "100.00"],
     ["SST amount", "calc", "Paid total − amount ex-SST, so the parts always add up to the paid total.", "8.00"],
-    ["Reference", "calc", "<code>WarrantyRefNo</code>, at most 20 characters. New refs are 20 characters and sent as-is (<code>RHP-20261106-E943253</code>). Older 22-character refs, like this example, drop their dashes.", "RHP20261105E94325329"],
+    ["Reference", "calc", "<code>WarrantyRefNo</code>, at most 20 characters. New refs use a 2-digit year (<code>RHP-yyMMdd-XXXXXXXXX</code>), are 20 characters and are sent as-is (<code>RHP-261106-E94325329</code>). Older 22-character refs, like this example, drop their dashes.", "RHP20261105E94325329"],
     ["Sale date", "header", "<code>PaymentDate</code>, else the current time.", "2026-11-05T14:10:50"],
     ["Now", "calc", "Server time when the request is built.", "2026-11-05T14:19:17"],
   ],
@@ -438,15 +474,15 @@ const DATA = {
     ["CustomerCode", "setting", "<code>EmaxCustomerCode</code>. One cash customer for every consumer sale.", "CASH SALES"],
     ["ContactPerson", "header", "<code>UserName</code>, at most 100 characters.", "BRIAN"],
     ["ContactNumber", "header", "<code>UserPhone</code>, with <code>+60</code> changed to <code>0</code>.", "0123456789"],
-    ["Address1 / 2 / 3", "fixed", "<code>null</code>", "null"],
-    ["ProjectNo", "fixed", "<code>null</code>", "null"],
-    ["ReminderNote", "fixed", "<code>null</code>", "null"],
+    ["Address1 / 2 / 3", "fixed", "<code>null</code>. They print as <b>Address</b>, which is left empty. Open question for eMAX.", "null"],
+    ["ProjectNo", "fixed", "<code>null</code> for now. It prints as <b>Vehicle</b>, but eMAX only accepts a code from its Project list: sending <code>TEH1234 MAZDA CX-8</code> fails with <code>ProjectName Not Found</code>. Waiting on eMAX for a free-text field.", "null"],
+    ["ReminderNote", "header", "<code>{MileageKMAtPurchase} KM - {MaxMileageKM} KM</code>, with thousand separators. Prints as <b>Note</b>.", "55,246 KM - 65,246 KM"],
     ["CustomerShipToCode", "fixed", "<code>null</code>", "null"],
-    ["DeliveryDateTime", "calc", "Sale date.", "2026-11-05T14:10:50"],
-    ["PONumber", "fixed", "<code>null</code>", "null"],
-    ["ReferenceNumber", "calc", "Reference.", "RHP20261105E94325329"],
-    ["InvoiceRemark", "header", "<code>RHP warranty {WarrantyRefNo} | Plate {PlateNumber} | Outlet {outlet name}</code>, at most 500 characters. The outlet name comes from <code>Master_Customer</code>.", "RHP warranty RHP-20261105-E94325329 | Plate VJH988 | Outlet (NG) SENG BEE SDN BHD"],
-    ["DeliveryRemark", "fixed", "<code>null</code>", "null"],
+    ["DeliveryDateTime", "header", "<code>WarrantyExpiryDate</code>, else the sale date. Prints as <b>Expiry Date</b>.", "2027-05-06T00:00:00"],
+    ["PONumber", "fixed", "<code>RHP</code>, always: the microsite only sells RHP. Prints as <b>PO No</b>.", "RHP"],
+    ["ReferenceNumber", "calc", "Reference.", "RHP-261106-41982B2F9"],
+    ["InvoiceRemark", "header", "The outlet from <code>Master_Customer</code>, one item per line, at most 500 characters: <code>Outlet: {CustomerName}</code>, <code>Outlet Address: {FullAddress}</code>, <code>Outlet Contact Person: {ContactPerson}</code>, <code>Outlet Contact Number: {TelNo, else MobileNo}</code>. Blank items are left out. Prints at the <b>bottom</b> of the CS, after eMAX's PAID / BALANCE text, not under Outlet Details.", "Outlet: (NG) SENG BEE SDN BHD\nOutlet Address: TB 2985 SEDCO LIGHT INDUSTRIAL ESTATE MILE 3, JALAN APAS, 91000 TAWAU, SABAH.\nOutlet Contact Person: MR NG KOK VNI\nOutlet Contact Number: 6089911084"],
+    ["DeliveryRemark", "fixed", "<code>null</code>. It may be what prints as <b>Outlet Details</b>; not tested.", "null"],
     ["CurrencyCode", "fixed", "<code>MYR</code>", "MYR"],
     ["CurrencyRate", "fixed", "<code>1</code>", "1"],
     ["TotalServiceAmount", "calc", "Amount ex-SST. The warranty is booked as a service.", "100.00"],
@@ -458,33 +494,33 @@ const DATA = {
     ["TotalAmount", "calc", "Paid total.", "108.00"],
     ["DepositAmount", "calc", "Paid total. A Cash Sale is paid in full up front.", "108.00"],
     ["BalanceAmount", "fixed", "<code>0</code>", "0"],
-    ["TotalItems", "fixed", "<code>1</code>, the number of lines.", "1"],
+    ["TotalItems", "calc", "The number of lines, one per tyre.", "4"],
     ["ShipType", "fixed", "<code>NORMAL</code>", "NORMAL"],
     ["CreatedBy / ModifiedBy", "fixed", "<code>SYSTEM</code>", "SYSTEM"],
     ["CreationDateTime / ModificationDateTime", "calc", "Now.", "2026-11-05T14:19:17"],
     ["PaymentDueDate", "fixed", "<code>null</code>", "null"],
     ["IsClosed", "fixed", "<code>false</code>", "false"],
     ["RecipientSignature / AuthorizeSignature", "fixed", "<code>null</code>", "null"],
-    ["ItemDetails", "calc", "The one line below. It must be named <code>ItemDetails</code>; eMAX ignores <code>Items</code>.", "[ 1 line ]"],
+    ["ItemDetails", "calc", "One line per tyre, below. It must be named <code>ItemDetails</code>; eMAX ignores <code>Items</code>.", "[ 4 lines ]"],
   ],
   "t-sales-line": [
-    ["LineNumber", "fixed", "<code>1</code>", "1"],
+    ["LineNumber", "calc", "1, 2, 3 … in <code>WarrantyDetailID</code> order.", "1"],
     ["ItemCode", "setting", "<code>EmaxItemCode_{plan}</code>, where plan is the warranty's <code>WarrantyPlanCode</code> (default <code>RHP</code>). Falls back to <code>EmaxItemCode</code>. This is the eMAX <b>stock code</b>: ImportSales has no separate StockCode field. The code must already exist as a stock item in the target eMAX.", "RHPWARRANTY"],
-    ["ItemDescription", "header", "<code>{plan} Road Hazard Protection Warranty - {WarrantyRefNo}</code>, at most 200 characters.", "RHP Road Hazard Protection Warranty - RHP-20261105-E94325329"],
+    ["ItemDescription", "header", "<code>{WarrantyMonth} months {plan} program</code>, with the months from <code>RHP_WarrantyPlan</code>; <code>{plan} program</code> when the months are missing.", "6 months RHP program"],
     ["UOMCode", "setting", "<code>EmaxUOMCode</code>, else <code>UNIT</code>.", "UNIT"],
     ["Quantity", "fixed", "<code>1</code>", "1"],
     ["FOCQuantity", "fixed", "<code>0</code>", "0"],
-    ["UnitPrice", "calc", "Amount ex-SST.", "100.00"],
-    ["TotalPrice", "calc", "Amount ex-SST.", "100.00"],
+    ["UnitPrice", "calc", "This line's share of the amount ex-SST.", "25.00"],
+    ["TotalPrice", "calc", "This line's share of the amount ex-SST.", "25.00"],
     ["CostPrice", "fixed", "<code>0</code>", "0"],
     ["DiscountAmount", "fixed", "<code>0</code>", "0"],
-    ["TaxAmount", "calc", "SST amount.", "8.00"],
-    ["TotalAmountWithTax", "calc", "Paid total.", "108.00"],
+    ["TaxAmount", "calc", "This line's share of the paid total, minus its share of the amount ex-SST.", "2.00"],
+    ["TotalAmountWithTax", "calc", "This line's share of the paid total.", "27.00"],
     ["TaxCode", "fixed", "<code>SST</code>", "SST"],
     ["IsGSTInclusive", "fixed", "<code>false</code>", "false"],
     ["SalesmanCode", "fixed", "<code>null</code>", "null"],
     ["LocationCode", "setting", "<code>EmaxLocationCode</code>, or <code>null</code> when blank.", "null"],
-    ["Remark", "detail", "<code>Plate {PlateNumber} | Covered {from} - {to} | {tyres}</code>, at most 200 characters. Covered runs from <code>WarrantyPurchaseDate</code> (else <code>CreatedDate</code>) to <code>WarrantyExpiryDate</code>, as dd/MM/yyyy, and is left out if either date is missing. Tyres are the <code>TyreDescription</code> values grouped as <code>{count} x {description}</code>.", "Plate VJH988 | Covered 05/11/2026 - 05/05/2027 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V"],
+    ["Remark", "detail", "<code>TyreDescription</code>, <code>TyreSize</code> and <code>DOTCode</code> of this tyre, one per line, at most 200 characters.", "MICHELIN 225/55R19 PRIMACY 5 99V\n225/55R19\n1W8JN039X0326"],
     ["Status", "fixed", "<code>null</code>", "null"],
     ["CreatedBy / ModifiedBy", "fixed", "<code>SYSTEM</code>", "SYSTEM"],
     ["CreationDateTime / ModificationDateTime", "calc", "Now.", "2026-11-05T14:19:17"],
@@ -548,7 +584,7 @@ for (const [id, rows] of Object.entries(DATA)) {
     return `<tr${kind === "fixed" ? ' class="fixed"' : ""}>` +
       `<td class="f">${esc(f)}</td>` +
       `<td class="s"><span class="badge ${group}">${label}</span><span class="d">${src}</span></td>` +
-      `<td class="e">${esc(ex)}</td>` +
+      `<td class="e">${esc(ex).replace(/\n/g, "<br>")}</td>` +
       `<td class="r"><textarea rows="1" data-key="${esc(id + "|" + f)}" placeholder="Add a remark" aria-label="Remark for ${esc(f)}"></textarea><span class="by" hidden></span></td></tr>`;
   }).join("");
 }
