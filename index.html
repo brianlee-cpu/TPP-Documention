@@ -506,7 +506,7 @@ const DATA = {
   "t-sales-line": [
     ["LineNumber", "calc", "1, 2, 3 … in <code>WarrantyDetailID</code> order.", "1"],
     ["ItemCode", "detail", "Per tyre, from the tyre's size category <code>PWPInchCategory</code> (saved at registration): <code>RHP+16BLW</code> for 16 inch and below, <code>RHP+17ABV</code> for 17 inch and above. eMAX has the same item codes, so it is sent as-is. Setting <code>EmaxItemCode_{category}</code> overrides it; old rows with no category fall back to <code>EmaxItemCode_{plan}</code>, then <code>EmaxItemCode</code>. This is the eMAX <b>stock code</b>: ImportSales has no separate StockCode field. The code must already exist as a stock item in the target eMAX.", "RHP+17ABV"],
-    ["ItemDescription", "header", "<code>{WarrantyMonth} months {plan} program</code>, with the months from <code>RHP_WarrantyPlan</code>; <code>{plan} program</code> when the months are missing.", "6 months RHP program"],
+    ["ItemDescription", "fixed", "<code>null</code>. eMAX prints the item's own description from its stock master.", "null"],
     ["UOMCode", "setting", "<code>EmaxUOMCode</code>, else <code>UNIT</code>.", "UNIT"],
     ["Quantity", "fixed", "<code>1</code>", "1"],
     ["FOCQuantity", "fixed", "<code>0</code>", "0"],
