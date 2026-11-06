@@ -97,7 +97,7 @@ main {
   padding-block: 28px 64px;
   padding-left: max(16px, min(40px, 4vw)); padding-right: max(16px, min(40px, 4vw), env(safe-area-inset-right, 0px));
 }
-.wrap { max-width: 1080px; width: 100%; display: grid; gap: 24px; }
+.wrap { max-width: 1480px; width: 100%; display: grid; gap: 24px; }
 
 /* Page heading */
 .title { display: grid; gap: 6px; }
@@ -155,7 +155,33 @@ td.f { font-family: var(--mono); font-weight: 600; font-size: 12.5px; white-spac
 td.s { min-width: 300px; }
 td.s .badge { margin-bottom: 4px; }
 td.s .d { display: block; }
-td.e { font-family: var(--mono); font-size: 12.5px; color: var(--tp-text-secondary); width: 28%; min-width: 150px; word-break: break-word; font-variant-numeric: tabular-nums; }
+td.e { font-family: var(--mono); font-size: 12.5px; color: var(--tp-text-secondary); width: 22%; min-width: 150px; word-break: break-word; font-variant-numeric: tabular-nums; }
+td.r { width: 24%; min-width: 220px; position: relative; }
+td.r textarea {
+  display: block; width: 100%; min-height: 34px; resize: vertical; overflow: hidden;
+  font: inherit; font-size: 13px; line-height: 1.45; color: var(--tp-text);
+  background: transparent; border: 1.5px dashed transparent; border-radius: 6px; padding: 5px 8px;
+}
+td.r textarea::placeholder { color: var(--tp-gray-500); }
+tbody tr:hover td.r textarea { border-color: var(--tp-gray-300); background: #fff; }
+td.r textarea:focus { border-style: solid; border-color: var(--tp-green); background: #fff; box-shadow: 0 0 0 3px var(--tp-green-glow); outline: none; }
+td.r.dirty textarea { border-style: solid; border-color: var(--tp-yellow-dark); background: var(--tint-yellow); }
+td.r.dirty::after { content: "Not saved"; position: absolute; right: 18px; bottom: 3px; font-size: 10px; font-weight: 600; color: var(--text-yellow); pointer-events: none; }
+th.rh { color: var(--tp-green-dark); }
+
+/* Remarks bar */
+.rbtn { position: relative; height: 38px; padding: 0 14px; font: inherit; font-size: 13px; font-weight: 600; color: var(--tp-green-dark); background: #fff; border: 1.5px solid var(--tp-green); border-radius: var(--tp-radius-sm); cursor: pointer; white-space: nowrap; }
+.rbtn:hover { background: var(--tint-green); }
+.rbtn .n { margin-left: 6px; font-size: 11px; background: var(--tp-yellow); color: var(--tp-text); border-radius: 999px; padding: 1px 7px; }
+.rpanel { position: fixed; z-index: 30; top: calc(var(--nav-h) + 10px); right: max(16px, env(safe-area-inset-right, 0px)); width: min(420px, calc(100vw - 32px)); background: #fff; border: 1px solid var(--tp-gray-200); border-radius: var(--tp-radius); box-shadow: 0 20px 25px -5px rgba(0,0,0,.08), 0 8px 10px -6px rgba(0,0,0,.04); padding: 18px; display: grid; gap: 12px; font-size: 13.5px; }
+.rpanel h3 { margin: 0; font-size: 15px; }
+.rpanel ol { margin: 0; padding-left: 18px; display: grid; gap: 4px; color: var(--tp-text-secondary); }
+.rpanel .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.rpanel button { height: 36px; padding: 0 14px; font: inherit; font-size: 13px; font-weight: 600; border-radius: var(--tp-radius-sm); cursor: pointer; }
+.rpanel .pri { color: #fff; border: 0; background: linear-gradient(135deg, var(--tp-green) 0%, var(--tp-green-light) 100%); }
+.rpanel .sec { color: var(--tp-text-secondary); background: #fff; border: 1.5px solid var(--tp-gray-300); }
+.rpanel .st { font-size: 12.5px; color: var(--tp-green-dark); min-height: 1em; }
+.rpanel textarea { width: 100%; height: 110px; font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--tp-gray-300); border-radius: 6px; padding: 8px; }
 tr.fixed td.f { font-weight: 400; color: var(--tp-text-secondary); }
 tr.fixed td.s .d, tr.fixed td.e { color: var(--tp-gray-500); }
 body.hide-fixed tr.fixed { display: none; }
@@ -189,7 +215,9 @@ footer { font-size: 12.5px; color: var(--tp-text-secondary); padding-top: 8px; }
   .step::before { display: none; }
   .keygrid { grid-template-columns: minmax(0, 1fr); }
   .switch span { display: none; }
-  .brand b { font-size: 15px; }
+  .brand b { display: none; }
+  .tools { flex: 1 1 auto; gap: 10px; }
+  .rbtn { padding: 0 10px; }
   .title h1 { font-size: 23px; }
   .card-b { padding: 16px; }
   .card-h { padding: 12px 16px; }
@@ -203,9 +231,28 @@ footer { font-size: 12.5px; color: var(--tp-text-secondary); padding-top: 8px; }
     <div class="tools">
       <input id="q" type="search" placeholder="Find a field or value  ( / )" autocomplete="off" aria-label="Find a field or value">
       <label class="switch" for="hideFixed"><input type="checkbox" id="hideFixed"><span>Hide fixed</span></label>
+      <button class="rbtn" id="rbtn" type="button" aria-expanded="false" aria-controls="rpanel">Remarks<span class="n" id="rcount" hidden></span></button>
     </div>
   </div>
 </header>
+
+<div class="rpanel" id="rpanel" hidden role="dialog" aria-label="Save remarks">
+  <h3>Save remarks</h3>
+  <div id="rsummary">No unsaved remarks. Click any Remarks cell to write one.</div>
+  <ol>
+    <li>Write remarks in the Remarks column. They are kept in this browser until saved.</li>
+    <li>Click <b>Copy remarks.json</b>.</li>
+    <li>On GitHub, open <code>remarks.json</code> in the TPP-Documention repo, replace its contents with the copied text and commit.</li>
+    <li>Vercel redeploys and everyone sees the remarks.</li>
+  </ol>
+  <div class="row">
+    <button class="pri" id="rcopy" type="button">Copy remarks.json</button>
+    <button class="sec" id="rdiscard" type="button">Discard my edits</button>
+    <button class="sec" id="rclose" type="button">Close</button>
+  </div>
+  <div class="st" id="rstatus" aria-live="polite"></div>
+  <textarea id="rout" hidden readonly aria-label="remarks.json contents"></textarea>
+</div>
 
 <div class="shell">
   <nav class="side" aria-label="Contents">
@@ -487,24 +534,99 @@ const DATA = {
 const esc = (s) => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 for (const [id, rows] of Object.entries(DATA)) {
-  document.getElementById(id).innerHTML = rows.map(([f, kind, src, ex]) => {
+  const tbody = document.getElementById(id);
+  tbody.closest("table").querySelector("thead tr").insertAdjacentHTML("beforeend", '<th class="rh">Remarks</th>');
+  tbody.innerHTML = rows.map(([f, kind, src, ex]) => {
     const [label, group] = KINDS[kind];
     return `<tr${kind === "fixed" ? ' class="fixed"' : ""}>` +
       `<td class="f">${esc(f)}</td>` +
       `<td class="s"><span class="badge ${group}">${label}</span><span class="d">${src}</span></td>` +
-      `<td class="e">${esc(ex)}</td></tr>`;
+      `<td class="e">${esc(ex)}</td>` +
+      `<td class="r"><textarea rows="1" data-key="${esc(id + "|" + f)}" placeholder="Add a remark" aria-label="Remark for ${esc(f)}"></textarea></td></tr>`;
   }).join("");
 }
 
-// Find
+// Remarks: saved = remarks.json in the repo (shared, committed); drafts = this browser only.
+const DRAFT_KEY = "remarkDrafts";
+let saved = {};
+let drafts = {};
+try { drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}") || {}; } catch { drafts = {}; }
+const areas = [...document.querySelectorAll("td.r textarea")];
+const grow = (ta) => { ta.style.height = "auto"; ta.style.height = ta.scrollHeight + 2 + "px"; };
+const current = (k) => (k in drafts ? drafts[k] : (saved[k] || ""));
+
+function storeDrafts() { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts)); } catch {} }
+function paintRemarks() {
+  for (const ta of areas) {
+    const k = ta.dataset.key;
+    if (document.activeElement !== ta) ta.value = current(k);
+    ta.parentElement.classList.toggle("dirty", k in drafts);
+    grow(ta);
+  }
+  const n = Object.keys(drafts).length;
+  const c = document.getElementById("rcount");
+  c.hidden = n === 0; c.textContent = n;
+  document.getElementById("rsummary").textContent = n === 0
+    ? "No unsaved remarks. Click any Remarks cell to write one."
+    : `${n} remark${n === 1 ? "" : "s"} not saved yet. Copy them into remarks.json to share.`;
+}
+for (const ta of areas) {
+  ta.addEventListener("input", () => {
+    const k = ta.dataset.key, v = ta.value.trim();
+    if (v === (saved[k] || "")) delete drafts[k]; else drafts[k] = v;
+    storeDrafts();
+    ta.parentElement.classList.toggle("dirty", k in drafts);
+    grow(ta);
+    paintRemarks();
+  });
+}
+function mergedJson() {
+  const out = {};
+  for (const ta of areas) { const v = current(ta.dataset.key); if (v) out[ta.dataset.key] = v; }
+  return JSON.stringify(out, null, 2) + "\n";
+}
+
+const rpanel = document.getElementById("rpanel"), rbtn = document.getElementById("rbtn");
+const rstatus = document.getElementById("rstatus"), rout = document.getElementById("rout");
+function togglePanel(open) { rpanel.hidden = !open; rbtn.setAttribute("aria-expanded", String(open)); rstatus.textContent = ""; rout.hidden = true; }
+rbtn.addEventListener("click", () => togglePanel(rpanel.hidden));
+document.getElementById("rclose").addEventListener("click", () => togglePanel(false));
+document.getElementById("rcopy").addEventListener("click", () => {
+  const json = mergedJson();
+  const fallback = () => { rout.value = json; rout.hidden = false; rout.focus(); rout.select(); rstatus.textContent = "Copy was blocked. Select the text below and copy it."; };
+  try {
+    navigator.clipboard.writeText(json).then(
+      () => { rstatus.textContent = "Copied. Paste it into remarks.json on GitHub and commit."; },
+      fallback);
+  } catch { fallback(); }
+});
+let discardArmed = false;
+document.getElementById("rdiscard").addEventListener("click", (e) => {
+  if (!discardArmed) { discardArmed = true; e.target.textContent = "Click again to discard"; setTimeout(() => { discardArmed = false; e.target.textContent = "Discard my edits"; }, 3000); return; }
+  discardArmed = false; e.target.textContent = "Discard my edits";
+  drafts = {}; storeDrafts(); paintRemarks(); rstatus.textContent = "Your unsaved edits were discarded.";
+});
+
+fetch("remarks.json", { cache: "no-store" })
+  .then(r => r.ok ? r.json() : {})
+  .catch(() => ({}))
+  .then(j => {
+    saved = (j && typeof j === "object") ? j : {};
+    for (const k of Object.keys(drafts)) if (drafts[k] === (saved[k] || "")) delete drafts[k];
+    storeDrafts(); paintRemarks();
+  });
+paintRemarks();
+
+// Find (remark cells are left alone so typing is never lost; their text still counts as a match)
 const q = document.getElementById("q");
 const rows = [...document.querySelectorAll(".tbl tbody tr")];
-const original = new Map(rows.map(r => [r, r.innerHTML]));
+const cellsOf = (r) => [...r.querySelectorAll("td:not(.r)")];
+const original = new Map(rows.flatMap(r => cellsOf(r).map(c => [c, c.innerHTML])));
 const hideFixed = document.getElementById("hideFixed");
 
 function mark(html, term) {
   const re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
-  return html.replace(/>([^<]+)</g, (m, text) => ">" + text.replace(re, "<mark>$1</mark>") + "<");
+  return ("<i>" + html + "</i>").replace(/>([^<]+)</g, (m, text) => ">" + text.replace(re, "<mark>$1</mark>") + "<").slice(3, -4);
 }
 
 function apply() {
@@ -512,10 +634,12 @@ function apply() {
   const lower = term.toLowerCase();
   let shown = 0;
   for (const r of rows) {
-    r.innerHTML = original.get(r);
-    const hit = !lower || r.textContent.toLowerCase().includes(lower);
+    const cells = cellsOf(r);
+    cells.forEach(c => c.innerHTML = original.get(c));
+    const remark = (r.querySelector("td.r textarea")?.value || "").toLowerCase();
+    const hit = !lower || r.textContent.toLowerCase().includes(lower) || remark.includes(lower);
     r.hidden = !hit;
-    if (hit) { shown++; if (term) r.innerHTML = mark(r.innerHTML, term); }
+    if (hit) { shown++; if (term) cells.forEach(c => c.innerHTML = mark(c.innerHTML, term)); }
   }
   const searching = !!lower;
   document.getElementById("top").hidden = searching;
