@@ -325,7 +325,7 @@ footer { font-size: 12.5px; color: var(--tp-text-secondary); padding-top: 8px; }
       <section class="card" id="sales">
         <div class="card-h"><h2>Cash Sale</h2><span class="ep"><b>POST</b>/Sales?Method=ImportSales</span></div>
         <div class="card-b">
-          <p>A JSON array with one sales header, sent to <code>{EmaxWebAPIUrl}</code>. Nothing is sent if any of <code>EmaxBranchCode</code>, <code>EmaxCustomerCode</code>, <code>EmaxItemCode_{plan}</code>, <code>EmaxPaymentType</code> or <code>EmaxPaymentAccountCode</code> is blank.</p>
+          <p>A JSON array with one sales header, sent to <code>{EmaxWebAPIUrl}</code>. Nothing is sent if any of <code>EmaxBranchCode</code>, <code>EmaxCustomerCode</code>, <code>EmaxPaymentType</code> or <code>EmaxPaymentAccountCode</code> is blank, or a tyre has no item code.</p>
 
           <div class="doc" role="figure" aria-label="How the line prints on the eMAX Cash Sale">
             <table>
@@ -505,7 +505,7 @@ const DATA = {
   ],
   "t-sales-line": [
     ["LineNumber", "calc", "1, 2, 3 … in <code>WarrantyDetailID</code> order.", "1"],
-    ["ItemCode", "setting", "<code>EmaxItemCode_{plan}</code>, where plan is the warranty's <code>WarrantyPlanCode</code> (default <code>RHP</code>). Falls back to <code>EmaxItemCode</code>. This is the eMAX <b>stock code</b>: ImportSales has no separate StockCode field. The code must already exist as a stock item in the target eMAX.", "RHPWARRANTY"],
+    ["ItemCode", "detail", "Per tyre, from the tyre's size category <code>PWPInchCategory</code> (saved at registration): <code>RHP+16BLW</code> for 16 inch and below, <code>RHP+17ABV</code> for 17 inch and above. eMAX has the same item codes, so it is sent as-is. Setting <code>EmaxItemCode_{category}</code> overrides it; old rows with no category fall back to <code>EmaxItemCode_{plan}</code>, then <code>EmaxItemCode</code>. This is the eMAX <b>stock code</b>: ImportSales has no separate StockCode field. The code must already exist as a stock item in the target eMAX.", "RHP+17ABV"],
     ["ItemDescription", "header", "<code>{WarrantyMonth} months {plan} program</code>, with the months from <code>RHP_WarrantyPlan</code>; <code>{plan} program</code> when the months are missing.", "6 months RHP program"],
     ["UOMCode", "setting", "<code>EmaxUOMCode</code>, else <code>UNIT</code>.", "UNIT"],
     ["Quantity", "fixed", "<code>1</code>", "1"],
