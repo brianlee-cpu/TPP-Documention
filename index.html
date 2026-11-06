@@ -250,8 +250,8 @@ footer { font-size: 12.5px; color: var(--tp-text-secondary); padding-top: 8px; }
   <div class="conn" id="rconn">Connecting to the Google Sheet…</div>
   <div id="rsummary"></div>
   <form id="rform" class="row" style="display:grid;gap:10px">
-    <label>Your name<input id="rname" autocomplete="name" maxlength="100" placeholder="Shown next to your remarks"></label>
-    <label>Edit key<input id="rkey" type="password" autocomplete="off" placeholder="Needed to save"></label>
+    <label>Your name (optional)<input id="rname" autocomplete="name" maxlength="100" placeholder="Shown next to your remarks"></label>
+    <label id="rkeywrap" hidden>Edit key<input id="rkey" type="password" autocomplete="off" placeholder="Needed to save"></label>
     <div class="row">
       <button class="pri" type="submit">Save and retry unsaved</button>
       <button class="sec" id="rreload" type="button">Reload remarks</button>
@@ -591,7 +591,7 @@ function paintCount() {
   c.hidden = n === 0; c.textContent = n;
   document.getElementById("rsummary").textContent = n === 0
     ? "All remarks are saved. Click any Remarks cell to write one."
-    : `${n} remark${n === 1 ? "" : "s"} not saved yet${editor.key ? "." : ". Enter the edit key below to save."}`;
+    : `${n} remark${n === 1 ? "" : "s"} not saved yet.`;
 }
 function paintAll() { areas.forEach(ta => paintCell(ta)); paintCount(); }
 
@@ -599,7 +599,6 @@ async function save(k) {
   const ta = areaByKey.get(k);
   if (!(k in drafts) || !ta) return;
   if (!SHEET_URL) { say("Remarks storage is not set up yet (no Google Sheet URL).", true); return; }
-  if (!editor.key) { paintCount(); return; }
   const text = drafts[k];
   paintCell(ta, "Saving…");
   try {
@@ -613,7 +612,8 @@ async function save(k) {
     setTimeout(() => { if (ta.parentElement.dataset.state === "Saved") paintCell(ta, null); }, 2000);
   } catch (e) {
     paintCell(ta, "Not saved");
-    say(e.message === "Wrong edit key" ? "The edit key is wrong. Check it under Remarks." : "Could not save: " + e.message, true);
+    if (e.message === "Wrong edit key") { togglePanel(true); rkeyWrap.hidden = false; }
+    say(e.message === "Wrong edit key" ? "Saving needs the edit key. Enter it below." : "Could not save: " + e.message, true);
   }
   paintCount();
 }
@@ -650,8 +650,9 @@ async function load() {
 
 const rpanel = document.getElementById("rpanel"), rbtn = document.getElementById("rbtn");
 const rname = document.getElementById("rname"), rkey = document.getElementById("rkey");
-rname.value = editor.name; rkey.value = editor.key;
-function togglePanel(open) { rpanel.hidden = !open; rbtn.setAttribute("aria-expanded", String(open)); if (open) (editor.key ? rname : rkey).focus(); }
+const rkeyWrap = document.getElementById("rkeywrap");
+rname.value = editor.name; rkey.value = editor.key; rkeyWrap.hidden = !editor.key;
+function togglePanel(open) { rpanel.hidden = !open; rbtn.setAttribute("aria-expanded", String(open)); if (open) rname.focus(); }
 rbtn.addEventListener("click", () => togglePanel(rpanel.hidden));
 document.getElementById("rclose").addEventListener("click", () => togglePanel(false));
 document.getElementById("rreload").addEventListener("click", () => { say(""); load(); });
@@ -659,7 +660,7 @@ document.getElementById("rform").addEventListener("submit", (e) => {
   e.preventDefault();
   editor = { name: rname.value.trim(), key: rkey.value.trim() };
   lsSet(LS.name, editor.name); lsSet(LS.key, editor.key);
-  say(editor.key ? "Saved. Unsaved remarks are being sent now." : "Enter the edit key to save remarks.", !editor.key);
+  say("Saved. Any unsaved remarks are being sent now.");
   saveAll(); paintCount();
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !rpanel.hidden) togglePanel(false); });

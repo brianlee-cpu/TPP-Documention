@@ -1,8 +1,9 @@
 /**
  * Remarks store for the eMAX Field Mapping docs page.
  *
- * Paste this into Extensions > Apps Script of the Google Sheet, set the script
- * property EDIT_KEY, and deploy as a Web app (Execute as: Me, Who has access: Anyone).
+ * Paste this into Extensions > Apps Script of the Google Sheet and deploy as a Web app
+ * (Execute as: Me, Who has access: Anyone). Optional: set the script property EDIT_KEY
+ * to require a password for saving; without it anyone with the page can edit.
  * The page reads remarks with GET and saves one remark per POST.
  *
  * Sheet "Remarks": Key | Remark | UpdatedBy | UpdatedAt
@@ -53,7 +54,8 @@ function doPost(e) {
   try { body = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, error: 'Bad request' }); }
 
   const editKey = PropertiesService.getScriptProperties().getProperty('EDIT_KEY');
-  if (!editKey || body.editKey !== editKey) return json_({ ok: false, error: 'Wrong edit key' });
+  // No EDIT_KEY script property = anyone can edit. Set one to require it.
+  if (editKey && body.editKey !== editKey) return json_({ ok: false, error: 'Wrong edit key' });
 
   const key = String(body.key || '').slice(0, 200);
   const text = String(body.text || '').trim().slice(0, 5000);
