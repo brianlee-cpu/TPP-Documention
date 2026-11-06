@@ -333,7 +333,7 @@ footer { font-size: 12.5px; color: var(--tp-text-secondary); padding-top: 8px; }
               <tbody>
                 <tr>
                   <td>1</td>
-                  <td>RHP Road Hazard Protection Warranty - RHP-20261105-E94325329<span class="rem">Plate VJH988 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V</span><span class="fld">ItemDescription + Remark</span></td>
+                  <td>RHP Road Hazard Protection Warranty - RHP-20261105-E94325329<span class="rem">Plate VJH988 | Covered 05/11/2026 - 05/05/2027 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V</span><span class="fld">ItemDescription + Remark</span></td>
                   <td class="num">1.0<br><span class="fld">Quantity</span></td>
                   <td>UNIT<br><span class="fld">UOMCode</span></td>
                   <td class="num">100.00<br><span class="fld">UnitPrice</span></td>
@@ -424,7 +424,7 @@ const DATA = {
     ["SST %", "header", "<code>SST</code>", "8"],
     ["Amount ex-SST", "calc", "Paid total ÷ (1 + SST % ÷ 100), rounded to 2 decimals.", "100.00"],
     ["SST amount", "calc", "Paid total − amount ex-SST, so the parts always add up to the paid total.", "8.00"],
-    ["Reference", "calc", "<code>WarrantyRefNo</code> without dashes, at most 20 characters.", "RHP20261105E94325329"],
+    ["Reference", "calc", "<code>WarrantyRefNo</code>, at most 20 characters. New refs are 20 characters and sent as-is (<code>RHP-20261106-E943253</code>). Older 22-character refs, like this example, drop their dashes.", "RHP20261105E94325329"],
     ["Sale date", "header", "<code>PaymentDate</code>, else the current time.", "2026-11-05T14:10:50"],
     ["Now", "calc", "Server time when the request is built.", "2026-11-05T14:19:17"],
   ],
@@ -469,7 +469,7 @@ const DATA = {
   ],
   "t-sales-line": [
     ["LineNumber", "fixed", "<code>1</code>", "1"],
-    ["ItemCode", "setting", "<code>EmaxItemCode_{plan}</code>, where plan is the warranty's <code>WarrantyPlanCode</code> (default <code>RHP</code>). Falls back to <code>EmaxItemCode</code>.", "RHPWARRANTY"],
+    ["ItemCode", "setting", "<code>EmaxItemCode_{plan}</code>, where plan is the warranty's <code>WarrantyPlanCode</code> (default <code>RHP</code>). Falls back to <code>EmaxItemCode</code>. This is the eMAX <b>stock code</b>: ImportSales has no separate StockCode field. The code must already exist as a stock item in the target eMAX.", "RHPWARRANTY"],
     ["ItemDescription", "header", "<code>{plan} Road Hazard Protection Warranty - {WarrantyRefNo}</code>, at most 200 characters.", "RHP Road Hazard Protection Warranty - RHP-20261105-E94325329"],
     ["UOMCode", "setting", "<code>EmaxUOMCode</code>, else <code>UNIT</code>.", "UNIT"],
     ["Quantity", "fixed", "<code>1</code>", "1"],
@@ -484,7 +484,7 @@ const DATA = {
     ["IsGSTInclusive", "fixed", "<code>false</code>", "false"],
     ["SalesmanCode", "fixed", "<code>null</code>", "null"],
     ["LocationCode", "setting", "<code>EmaxLocationCode</code>, or <code>null</code> when blank.", "null"],
-    ["Remark", "detail", "<code>Plate {PlateNumber} | {tyres}</code>, at most 200 characters. Tyres are the <code>TyreDescription</code> values grouped as <code>{count} x {description}</code>.", "Plate VJH988 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V"],
+    ["Remark", "detail", "<code>Plate {PlateNumber} | Covered {from} - {to} | {tyres}</code>, at most 200 characters. Covered runs from <code>WarrantyPurchaseDate</code> (else <code>CreatedDate</code>) to <code>WarrantyExpiryDate</code>, as dd/MM/yyyy, and is left out if either date is missing. Tyres are the <code>TyreDescription</code> values grouped as <code>{count} x {description}</code>.", "Plate VJH988 | Covered 05/11/2026 - 05/05/2027 | 4 x MICHELIN 225/55R19 PRIMACY 5 99V"],
     ["Status", "fixed", "<code>null</code>", "null"],
     ["CreatedBy / ModifiedBy", "fixed", "<code>SYSTEM</code>", "SYSTEM"],
     ["CreationDateTime / ModificationDateTime", "calc", "Now.", "2026-11-05T14:19:17"],
